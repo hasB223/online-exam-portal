@@ -13,6 +13,7 @@ class ExamController extends Controller
 
         $exams = Exam::query()
             ->where('is_published', true)
+            ->where('class_room_id', $user->class_room_id)
             ->withCount('questions')
             ->latest()
             ->get()
@@ -22,7 +23,24 @@ class ExamController extends Controller
             ->get()
             ->keyBy('exam_id');
 
-        return view('student.exams.index', compact('exams', 'attempts'));
+        $statuses = [];
+
+        foreach ($exams as $exam) {
+            $attempt = $attempts->get($exam->id);
+
+            if (! $attempt) {
+                $statuses[$exam->id] = 'not_started';
+                continue;
+            }
+
+            if ($attempt->ends_at && $attempt->status === 'in_progress' && now()->greaterThan($attempt->ends_at)) {
+                $attempt->update(['status' => 'expired']);
+            }
+
+            $statuses[$exam->id] = $attempt->status;
+        }
+
+        return view('student.exams.index', compact('exams', 'attempts', 'statuses'));
     }
 
     public function show(Exam $exam)

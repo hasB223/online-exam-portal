@@ -65,6 +65,30 @@ const setupFlash = () => {
     });
 };
 
+const setupCountdowns = () => {
+    document.querySelectorAll('[data-countdown]').forEach((el) => {
+        const endsAt = new Date(el.dataset.endsAt);
+
+        const tick = () => {
+            const diff = endsAt - new Date();
+            if (Number.isNaN(diff)) {
+                return;
+            }
+            if (diff <= 0) {
+                el.textContent = '00:00';
+                return;
+            }
+
+            const minutes = Math.floor(diff / 60000);
+            const seconds = Math.floor((diff % 60000) / 1000);
+            el.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        };
+
+        tick();
+        setInterval(tick, 1000);
+    });
+};
+
 const setupClassSubjectFilter = () => {
     const classSelects = document.querySelectorAll('[data-class-room-select]');
     const subjectSelects = document.querySelectorAll('[data-subject-select]');
@@ -115,6 +139,25 @@ const setupQuestionTypeToggle = () => {
     });
 };
 
+const setupPasswordResetToggle = () => {
+    document.querySelectorAll('[data-reset-password-toggle]').forEach((button) => {
+        const container = button.closest('div')?.parentElement;
+        const fields = container?.querySelector('[data-reset-password-fields]');
+        if (!fields) {
+            return;
+        }
+
+        button.addEventListener('click', () => {
+            const isHidden = fields.classList.toggle('hidden');
+            if (isHidden) {
+                fields.querySelectorAll('input').forEach((input) => {
+                    input.value = '';
+                });
+            }
+        });
+    });
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('[data-theme-toggle]').forEach((button) => {
         button.addEventListener('click', toggleTheme);
@@ -124,6 +167,8 @@ document.addEventListener('DOMContentLoaded', () => {
     setupDropdowns();
     setupMobileNav();
     setupFlash();
+    setupCountdowns();
     setupClassSubjectFilter();
     setupQuestionTypeToggle();
+    setupPasswordResetToggle();
 });

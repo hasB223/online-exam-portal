@@ -7,13 +7,22 @@ use App\Http\Requests\SubmitAttemptRequest;
 use App\Models\Answer;
 use App\Models\Exam;
 use App\Models\ExamAttempt;
+use App\Services\ExamAttemptGuard;
 use Illuminate\Support\Facades\DB;
 
 class ExamAttemptController extends Controller
 {
+    public function __construct(private ExamAttemptGuard $guard)
+    {
+    }
+
     public function start(Exam $exam)
     {
         $this->authorize('view', $exam);
+
+        if ($exam->class_room_id !== request()->user()->class_room_id) {
+            abort(403);
+        }
 
         $attempt = ExamAttempt::firstOrCreate(
             [
@@ -22,8 +31,12 @@ class ExamAttemptController extends Controller
             ],
             [
                 'started_at' => now(),
+                'ends_at' => $exam->duration_minutes ? now()->addMinutes($exam->duration_minutes) : null,
+                'status' => 'in_progress',
             ]
         );
+
+        $this->guard->enforceExpiry($attempt);
 
         if ($attempt->isSubmitted()) {
             return redirect()
@@ -38,7 +51,9 @@ class ExamAttemptController extends Controller
     {
         $this->authorize('view', $attempt);
 
-        $attempt->load(['exam.questions']);
+        $this->guard->enforceExpiry($attempt);
+
+        $attempt->load(['exam.questions.choices']);
 
         $answers = $attempt->answers()
             ->get()
@@ -51,18 +66,42 @@ class ExamAttemptController extends Controller
     {
         $this->authorize('submit', $attempt);
 
-        $attempt->load('exam.questions');
+        $this->guard->enforceExpiry($attempt);
+
+        if ($attempt->status === 'expired') {
+            return redirect()
+                ->route('student.attempts.show', $attempt)
+                ->with('status', __('Attempt expired.'));
+        }
+
+        $attempt->load('exam.questions.choices');
 
         DB::transaction(function () use ($attempt, $request) {
-            $score = 0;
-            $totalPoints = 0;
+            $autoScore = 0;
+            $autoTotal = 0;
+            $textPending = 0;
 
             foreach ($attempt->exam->questions as $question) {
-                $totalPoints += $question->points;
-                $selected = $request->input("answers.{$question->id}");
-                $isCorrect = $selected !== null && (int) $selected === $question->correct_option;
-                $pointsAwarded = $isCorrect ? $question->points : 0;
-                $score += $pointsAwarded;
+                $payload = $request->input("answers.{$question->id}", []);
+
+                $selectedChoiceId = null;
+                $textAnswer = null;
+
+                if ($question->type === 'mcq') {
+                    $autoTotal += $question->points;
+                    $selectedChoiceId = $payload['selected_choice_id'] ?? null;
+
+                    if ($selectedChoiceId) {
+                        $validChoice = $question->choices->firstWhere('id', (int) $selectedChoiceId);
+                        $selectedChoiceId = $validChoice?->id;
+                        if ($validChoice?->is_correct) {
+                            $autoScore += $question->points;
+                        }
+                    }
+                } else {
+                    $textAnswer = $payload['text_answer'] ?? null;
+                    $textPending += 1;
+                }
 
                 Answer::updateOrCreate(
                     [
@@ -70,17 +109,18 @@ class ExamAttemptController extends Controller
                         'question_id' => $question->id,
                     ],
                     [
-                        'selected_option' => $selected,
-                        'is_correct' => $isCorrect,
-                        'points_awarded' => $pointsAwarded,
+                        'selected_choice_id' => $selectedChoiceId,
+                        'text_answer' => $textAnswer,
                     ]
                 );
             }
 
             $attempt->update([
                 'submitted_at' => now(),
-                'score' => $score,
-                'total_points' => $totalPoints,
+                'status' => 'submitted',
+                'auto_score' => $autoScore,
+                'auto_total_points' => $autoTotal,
+                'text_pending_count' => $textPending,
             ]);
         });
 

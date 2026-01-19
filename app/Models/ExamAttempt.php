@@ -18,6 +18,9 @@ class ExamAttempt extends Model
         'ends_at',
         'submitted_at',
         'status',
+        'auto_score',
+        'auto_total_points',
+        'text_pending_count',
     ];
 
     protected function casts(): array
@@ -46,6 +49,11 @@ class ExamAttempt extends Model
 
     public function isSubmitted(): bool
     {
-        return $this->submitted_at !== null;
+        return $this->status === 'submitted';
+    }
+
+    public function isExpired(): bool
+    {
+        return $this->status === 'expired';
     }
 }

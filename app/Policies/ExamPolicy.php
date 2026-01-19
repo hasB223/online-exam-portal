@@ -22,7 +22,11 @@ class ExamPolicy
             return $exam->created_by === $user->id;
         }
 
-        return $exam->isOpen();
+        if ($user->isStudent()) {
+            return $exam->class_room_id === $user->class_room_id && $exam->isOpen();
+        }
+
+        return false;
     }
 
     public function create(User $user): bool

@@ -24,7 +24,8 @@ class UpdateUserRequest extends FormRequest
             ],
             'role' => ['required', Rule::in(['admin', 'lecturer', 'student'])],
             'class_room_id' => ['nullable', 'exists:class_rooms,id'],
-            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
+            'password' => ['nullable', 'string', 'min:8', 'confirmed', 'required_with:password_confirmation'],
+            'password_confirmation' => ['nullable', 'string', 'min:8', 'required_with:password'],
         ];
     }
 }

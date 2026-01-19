@@ -11,15 +11,22 @@
                 @forelse ($exams as $exam)
                     @php
                         $attempt = $attempts->get($exam->id);
+                        $status = $statuses[$exam->id] ?? 'not_started';
                     @endphp
                     <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
                         <div class="flex items-center justify-between">
                             <h3 class="text-lg font-semibold text-slate-900 dark:text-white">{{ $exam->title }}</h3>
-                            @if ($attempt?->isSubmitted())
-                                <span class="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-900 dark:text-emerald-200">
-                                    {{ __('Completed') }}
-                                </span>
-                            @endif
+                            <span class="rounded-full px-3 py-1 text-xs font-semibold
+                                {{ $status === 'submitted' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-200' : '' }}
+                                {{ $status === 'in_progress' ? 'bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-200' : '' }}
+                                {{ $status === 'expired' ? 'bg-rose-100 text-rose-700 dark:bg-rose-900 dark:text-rose-200' : '' }}
+                                {{ $status === 'not_started' ? 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300' : '' }}
+                            ">
+                                {{ $status === 'submitted' ? __('Submitted') : '' }}
+                                {{ $status === 'in_progress' ? __('In progress') : '' }}
+                                {{ $status === 'expired' ? __('Expired') : '' }}
+                                {{ $status === 'not_started' ? __('Not started') : '' }}
+                            </span>
                         </div>
                         <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">{{ $exam->description ?? __('No description yet.') }}</p>
                         <div class="mt-4 flex flex-wrap items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
@@ -31,11 +38,6 @@
                             <a href="{{ route('student.exams.show', $exam) }}" class="rounded-full border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-600 transition hover:border-indigo-500 hover:text-indigo-600 dark:border-slate-700 dark:text-slate-300">
                                 {{ __('View Details') }}
                             </a>
-                            @if ($attempt?->isSubmitted())
-                                <span class="text-xs text-slate-500 dark:text-slate-400">
-                                    {{ __('Score') }}: {{ $attempt->score }} / {{ $attempt->total_points }}
-                                </span>
-                            @endif
                         </div>
                     </div>
                 @empty

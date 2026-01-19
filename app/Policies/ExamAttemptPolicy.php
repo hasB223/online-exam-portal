@@ -14,6 +14,6 @@ class ExamAttemptPolicy
 
     public function submit(User $user, ExamAttempt $attempt): bool
     {
-        return $attempt->user_id === $user->id && ! $attempt->isSubmitted();
+        return $attempt->user_id === $user->id && ! in_array($attempt->status, ['submitted', 'expired'], true);
     }
 }

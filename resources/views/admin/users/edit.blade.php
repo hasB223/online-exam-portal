@@ -44,15 +44,26 @@
                         </div>
                     </div>
 
-                    <div class="grid gap-4 sm:grid-cols-2">
-                        <div>
-                            <x-input-label for="password" :value="__('New Password')" />
-                            <x-text-input id="password" name="password" type="password" class="mt-1 block w-full" />
-                            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-semibold text-slate-900 dark:text-white">{{ __('Reset Password') }}</p>
+                                <p class="text-xs text-slate-500 dark:text-slate-400">{{ __('Only fill this if you want to change the user password.') }}</p>
+                            </div>
+                            <button type="button" class="rounded-full border border-slate-200 px-3 py-1 text-xs font-semibold text-slate-600 transition hover:border-indigo-500 hover:text-indigo-600 dark:border-slate-700 dark:text-slate-300" data-reset-password-toggle>
+                                {{ __('Set New Password') }}
+                            </button>
                         </div>
-                        <div>
-                            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-                            <x-text-input id="password_confirmation" name="password_confirmation" type="password" class="mt-1 block w-full" />
+                        <div class="mt-4 hidden grid gap-4 sm:grid-cols-2" data-reset-password-fields>
+                            <div>
+                                <x-input-label for="password" :value="__('New Password')" />
+                                <x-text-input id="password" name="password" type="password" class="mt-1 block w-full" />
+                                <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                            </div>
+                            <div>
+                                <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+                                <x-text-input id="password_confirmation" name="password_confirmation" type="password" class="mt-1 block w-full" />
+                            </div>
                         </div>
                     </div>
 

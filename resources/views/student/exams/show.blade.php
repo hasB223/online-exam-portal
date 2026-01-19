@@ -20,7 +20,11 @@
                 <div class="mt-6 flex flex-wrap items-center gap-3">
                     @if ($attempt?->isSubmitted())
                         <span class="rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-700 dark:bg-emerald-900 dark:text-emerald-200">
-                            {{ __('Completed') }} - {{ __('Score') }} {{ $attempt->score }} / {{ $attempt->total_points }}
+                            {{ __('Submitted') }}
+                        </span>
+                    @elseif ($attempt?->isExpired())
+                        <span class="rounded-full bg-rose-100 px-4 py-2 text-sm font-semibold text-rose-700 dark:bg-rose-900 dark:text-rose-200">
+                            {{ __('Expired') }}
                         </span>
                     @else
                         <form method="POST" action="{{ route('student.exams.start', $exam) }}">
