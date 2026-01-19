@@ -22,7 +22,21 @@ Route::get('/locale/{locale}', function (string $locale) {
 })->name('locale.switch');
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $user = auth()->user();
+
+    if (! $user) {
+        return redirect()->route('login');
+    }
+
+    if ($user->isAdmin()) {
+        return redirect()->route('admin.dashboard');
+    }
+
+    if ($user->isLecturer()) {
+        return redirect()->route('lecturer.dashboard');
+    }
+
+    return redirect()->route('student.dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -32,11 +46,13 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::view('/', 'admin.dashboard')->name('dashboard');
     Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
     Route::patch('/users/{user}', [AdminUserController::class, 'update'])->name('users.update');
 });
 
 Route::middleware(['auth', 'role:lecturer,admin'])->prefix('lecturer')->name('lecturer.')->group(function () {
+    Route::view('/', 'lecturer.dashboard')->name('dashboard');
     Route::resource('exams', LecturerExamController::class)->except(['show']);
     Route::get('exams/{exam}/questions/create', [LecturerQuestionController::class, 'create'])->name('questions.create');
     Route::post('exams/{exam}/questions', [LecturerQuestionController::class, 'store'])->name('questions.store');
@@ -46,6 +62,7 @@ Route::middleware(['auth', 'role:lecturer,admin'])->prefix('lecturer')->name('le
 });
 
 Route::middleware(['auth', 'role:student'])->prefix('student')->name('student.')->group(function () {
+    Route::view('/', 'student.dashboard')->name('dashboard');
     Route::get('/exams', [StudentExamController::class, 'index'])->name('exams.index');
     Route::get('/exams/{exam}', [StudentExamController::class, 'show'])->name('exams.show');
     Route::post('/exams/{exam}/start', [ExamAttemptController::class, 'start'])->name('exams.start');
