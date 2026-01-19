@@ -12,36 +12,50 @@
                     @csrf
                     @method('put')
 
-                    <div>
-                        <x-input-label for="prompt" :value="__('Question')" />
-                        <textarea id="prompt" name="prompt" rows="4" class="mt-1 w-full rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-950">{{ old('prompt', $question->prompt) }}</textarea>
-                        <x-input-error :messages="$errors->get('prompt')" class="mt-2" />
-                    </div>
-
-                    <div class="grid gap-4 sm:grid-cols-2">
-                        @for ($i = 0; $i < 4; $i++)
-                            <div>
-                                <x-input-label for="option_{{ $i }}" :value="__('Option').' '.($i + 1)" />
-                                <x-text-input id="option_{{ $i }}" name="options[{{ $i }}]" class="mt-1 block w-full" :value="old('options.'.$i, $question->options[$i] ?? '')" required />
-                            </div>
-                        @endfor
-                        <x-input-error :messages="$errors->get('options')" class="sm:col-span-2 mt-2" />
-                    </div>
-
                     <div class="grid gap-4 sm:grid-cols-2">
                         <div>
-                            <x-input-label for="correct_option" :value="__('Correct Option')" />
-                            <select id="correct_option" name="correct_option" class="mt-1 w-full rounded-xl border-slate-200 text-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-950">
-                                @for ($i = 0; $i < 4; $i++)
-                                    <option value="{{ $i }}" @selected(old('correct_option', $question->correct_option) == $i)>{{ __('Option') }} {{ $i + 1 }}</option>
-                                @endfor
+                            <x-input-label for="type" :value="__('Type')" />
+                            <select id="type" name="type" class="mt-1 w-full rounded-xl border-slate-200 text-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-950" data-question-type>
+                                <option value="mcq" @selected(old('type', $question->type) === 'mcq')>{{ __('Multiple Choice') }}</option>
+                                <option value="text" @selected(old('type', $question->type) === 'text')>{{ __('Text') }}</option>
                             </select>
-                            <x-input-error :messages="$errors->get('correct_option')" class="mt-2" />
+                            <x-input-error :messages="$errors->get('type')" class="mt-2" />
                         </div>
                         <div>
                             <x-input-label for="points" :value="__('Points')" />
                             <x-text-input id="points" name="points" type="number" min="1" class="mt-1 block w-full" :value="old('points', $question->points)" required />
                             <x-input-error :messages="$errors->get('points')" class="mt-2" />
+                        </div>
+                    </div>
+
+                    <div>
+                        <x-input-label for="question_text" :value="__('Question')" />
+                        <textarea id="question_text" name="question_text" rows="4" class="mt-1 w-full rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-950">{{ old('question_text', $question->question_text) }}</textarea>
+                        <x-input-error :messages="$errors->get('question_text')" class="mt-2" />
+                    </div>
+
+                    <div data-choice-fields>
+                        <p class="text-sm font-medium text-slate-700 dark:text-slate-300">{{ __('Choices') }}</p>
+                        <div class="mt-2 grid gap-4 sm:grid-cols-2">
+                            @for ($i = 0; $i < 6; $i++)
+                                <div>
+                                    <x-input-label for="choice_{{ $i }}" :value="__('Choice').' '.($i + 1)" />
+                                    <x-text-input id="choice_{{ $i }}" name="choices[{{ $i }}]" class="mt-1 block w-full" :value="old('choices.'.$i, $question->choices[$i]->text ?? '')" />
+                                </div>
+                            @endfor
+                        </div>
+                        <div class="mt-3">
+                            <x-input-label for="correct_choice" :value="__('Correct Choice')" />
+                            <select id="correct_choice" name="correct_choice" class="mt-1 w-full rounded-xl border-slate-200 text-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-950">
+                                @php
+                                    $correctIndex = $question->choices->search(fn ($choice) => $choice->is_correct);
+                                @endphp
+                                @for ($i = 0; $i < 6; $i++)
+                                    <option value="{{ $i }}" @selected(old('correct_choice', $correctIndex) == $i)>{{ __('Choice') }} {{ $i + 1 }}</option>
+                                @endfor
+                            </select>
+                            <x-input-error :messages="$errors->get('correct_choice')" class="mt-2" />
+                            <x-input-error :messages="$errors->get('choices')" class="mt-2" />
                         </div>
                     </div>
 

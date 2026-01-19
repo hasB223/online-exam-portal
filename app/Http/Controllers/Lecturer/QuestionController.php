@@ -21,7 +21,25 @@ class QuestionController extends Controller
     {
         $this->authorize('update', $exam);
 
-        $exam->questions()->create($request->validated());
+        $data = $request->validated();
+
+        $question = $exam->questions()->create([
+            'type' => $data['type'],
+            'question_text' => $data['question_text'],
+            'points' => $data['points'],
+        ]);
+
+        if ($data['type'] === 'mcq') {
+            $choices = array_values(array_filter($data['choices'] ?? [], fn ($value) => $value !== null && $value !== ''));
+            $correctIndex = (int) $data['correct_choice'];
+
+            foreach ($choices as $index => $choiceText) {
+                $question->choices()->create([
+                    'text' => $choiceText,
+                    'is_correct' => $index === $correctIndex,
+                ]);
+            }
+        }
 
         return redirect()
             ->route('lecturer.exams.edit', $exam)
@@ -36,6 +54,8 @@ class QuestionController extends Controller
 
         $this->authorize('update', $question);
 
+        $question->load('choices');
+
         return view('lecturer.questions.edit', compact('exam', 'question'));
     }
 
@@ -47,7 +67,27 @@ class QuestionController extends Controller
 
         $this->authorize('update', $question);
 
-        $question->update($request->validated());
+        $data = $request->validated();
+
+        $question->update([
+            'type' => $data['type'],
+            'question_text' => $data['question_text'],
+            'points' => $data['points'],
+        ]);
+
+        $question->choices()->delete();
+
+        if ($data['type'] === 'mcq') {
+            $choices = array_values(array_filter($data['choices'] ?? [], fn ($value) => $value !== null && $value !== ''));
+            $correctIndex = (int) $data['correct_choice'];
+
+            foreach ($choices as $index => $choiceText) {
+                $question->choices()->create([
+                    'text' => $choiceText,
+                    'is_correct' => $index === $correctIndex,
+                ]);
+            }
+        }
 
         return redirect()
             ->route('lecturer.exams.edit', $exam)

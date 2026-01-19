@@ -14,8 +14,9 @@ class ExamController extends Controller
         $user = request()->user();
 
         $exams = Exam::query()
-            ->with('questions')
-            ->when(! $user->isAdmin(), fn ($query) => $query->where('created_by', $user->id))
+            ->with(['classRoom', 'subject'])
+            ->withCount('questions')
+            ->where('created_by', $user->id)
             ->latest()
             ->get();
 
@@ -26,7 +27,12 @@ class ExamController extends Controller
     {
         $this->authorize('create', Exam::class);
 
-        return view('lecturer.exams.create');
+        $classRooms = \App\Models\ClassRoom::query()
+            ->with('subjects')
+            ->orderBy('name')
+            ->get();
+
+        return view('lecturer.exams.create', compact('classRooms'));
     }
 
     public function store(StoreExamRequest $request)
@@ -50,7 +56,12 @@ class ExamController extends Controller
 
         $exam->load('questions.choices');
 
-        return view('lecturer.exams.edit', compact('exam'));
+        $classRooms = \App\Models\ClassRoom::query()
+            ->with('subjects')
+            ->orderBy('name')
+            ->get();
+
+        return view('lecturer.exams.edit', compact('exam', 'classRooms'));
     }
 
     public function update(UpdateExamRequest $request, Exam $exam)

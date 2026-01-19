@@ -17,22 +17,39 @@
                         <x-input-error :messages="$errors->get('title')" class="mt-2" />
                     </div>
 
-                    <div>
-                        <x-input-label for="description" :value="__('Description')" />
-                        <textarea id="description" name="description" rows="4" class="mt-1 w-full rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-950">{{ old('description') }}</textarea>
-                        <x-input-error :messages="$errors->get('description')" class="mt-2" />
-                    </div>
-
                     <div class="grid gap-4 sm:grid-cols-2">
                         <div>
-                            <x-input-label for="starts_at" :value="__('Starts At')" />
-                            <x-text-input id="starts_at" name="starts_at" type="datetime-local" class="mt-1 block w-full" :value="old('starts_at')" />
-                            <x-input-error :messages="$errors->get('starts_at')" class="mt-2" />
+                            <x-input-label for="class_room_id" :value="__('Class')" />
+                            <select id="class_room_id" name="class_room_id" class="mt-1 w-full rounded-xl border-slate-200 text-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-950" data-class-room-select>
+                                <option value="">{{ __('Select class') }}</option>
+                                @foreach ($classRooms as $classRoom)
+                                    <option value="{{ $classRoom->id }}" @selected(old('class_room_id') == $classRoom->id)>{{ $classRoom->name }}</option>
+                                @endforeach
+                            </select>
+                            <x-input-error :messages="$errors->get('class_room_id')" class="mt-2" />
                         </div>
                         <div>
-                            <x-input-label for="ends_at" :value="__('Ends At')" />
-                            <x-text-input id="ends_at" name="ends_at" type="datetime-local" class="mt-1 block w-full" :value="old('ends_at')" />
-                            <x-input-error :messages="$errors->get('ends_at')" class="mt-2" />
+                            <x-input-label for="subject_id" :value="__('Subject')" />
+                            <select id="subject_id" name="subject_id" class="mt-1 w-full rounded-xl border-slate-200 text-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-950" data-subject-select>
+                                <option value="">{{ __('Select subject') }}</option>
+                                @php
+                                    $subjectMap = [];
+                                    foreach ($classRooms as $classRoom) {
+                                        foreach ($classRoom->subjects as $subject) {
+                                            $subjectMap[$subject->id]['name'] = $subject->name;
+                                            $subjectMap[$subject->id]['classes'][] = $classRoom->id;
+                                        }
+                                    }
+                                @endphp
+                                @foreach ($subjectMap as $subjectId => $subjectData)
+                                    <option value="{{ $subjectId }}"
+                                        data-classes="{{ implode(',', $subjectData['classes'] ?? []) }}"
+                                        @selected(old('subject_id') == $subjectId)>
+                                        {{ $subjectData['name'] }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <x-input-error :messages="$errors->get('subject_id')" class="mt-2" />
                         </div>
                     </div>
 

@@ -14,11 +14,36 @@ class UpdateQuestionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'prompt' => ['required', 'string'],
-            'options' => ['required', 'array', 'size:4'],
-            'options.*' => ['required', 'string', 'max:255'],
-            'correct_option' => ['required', 'integer', 'min:0', 'max:3'],
+            'type' => ['required', 'in:mcq,text'],
+            'question_text' => ['required', 'string'],
+            'choices' => ['nullable', 'array'],
+            'choices.*' => ['nullable', 'string', 'max:255'],
+            'correct_choice' => ['nullable', 'integer', 'min:0', 'max:5'],
             'points' => ['required', 'integer', 'min:1'],
         ];
+    }
+
+    public function withValidator($validator): void
+    {
+        $validator->after(function ($validator) {
+            $type = $this->input('type');
+
+            if ($type === 'mcq') {
+                $choices = array_values(array_filter((array) $this->input('choices'), fn ($value) => $value !== null && $value !== ''));
+                $correct = $this->input('correct_choice');
+
+                if (count($choices) < 2 || count($choices) > 6) {
+                    $validator->errors()->add('choices', __('MCQ choices must be between 2 and 6.'));
+                }
+
+                if ($correct === null || ! array_key_exists($correct, $choices)) {
+                    $validator->errors()->add('correct_choice', __('Select exactly one correct choice.'));
+                }
+            }
+
+            if ($type === 'text' && ! empty($this->input('choices'))) {
+                $validator->errors()->add('choices', __('Text questions should not have choices.'));
+            }
+        });
     }
 }

@@ -65,6 +65,56 @@ const setupFlash = () => {
     });
 };
 
+const setupClassSubjectFilter = () => {
+    const classSelects = document.querySelectorAll('[data-class-room-select]');
+    const subjectSelects = document.querySelectorAll('[data-subject-select]');
+
+    if (!classSelects.length || !subjectSelects.length) {
+        return;
+    }
+
+    const updateSubjects = (classSelect, subjectSelect) => {
+        const classId = classSelect.value;
+        const options = subjectSelect.querySelectorAll('option[data-classes]');
+
+        options.forEach((option) => {
+            const classes = option.dataset.classes ? option.dataset.classes.split(',') : [];
+            const isAllowed = classId && classes.includes(classId);
+            option.hidden = !isAllowed;
+            if (!isAllowed && option.selected) {
+                option.selected = false;
+            }
+        });
+    };
+
+    classSelects.forEach((classSelect) => {
+        const subjectSelect = classSelect.closest('form')?.querySelector('[data-subject-select]');
+        if (!subjectSelect) {
+            return;
+        }
+
+        updateSubjects(classSelect, subjectSelect);
+        classSelect.addEventListener('change', () => updateSubjects(classSelect, subjectSelect));
+    });
+};
+
+const setupQuestionTypeToggle = () => {
+    document.querySelectorAll('[data-question-type]').forEach((select) => {
+        const form = select.closest('form');
+        const choiceFields = form?.querySelector('[data-choice-fields]');
+        if (!choiceFields) {
+            return;
+        }
+
+        const update = () => {
+            choiceFields.classList.toggle('hidden', select.value === 'text');
+        };
+
+        update();
+        select.addEventListener('change', update);
+    });
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('[data-theme-toggle]').forEach((button) => {
         button.addEventListener('click', toggleTheme);
@@ -74,4 +124,6 @@ document.addEventListener('DOMContentLoaded', () => {
     setupDropdowns();
     setupMobileNav();
     setupFlash();
+    setupClassSubjectFilter();
+    setupQuestionTypeToggle();
 });

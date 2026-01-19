@@ -30,22 +30,39 @@
                             <x-input-error :messages="$errors->get('title')" class="mt-2" />
                         </div>
 
-                        <div>
-                            <x-input-label for="description" :value="__('Description')" />
-                            <textarea id="description" name="description" rows="4" class="mt-1 w-full rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-950">{{ old('description', $exam->description) }}</textarea>
-                            <x-input-error :messages="$errors->get('description')" class="mt-2" />
-                        </div>
-
                         <div class="grid gap-4 sm:grid-cols-2">
                             <div>
-                                <x-input-label for="starts_at" :value="__('Starts At')" />
-                                <x-text-input id="starts_at" name="starts_at" type="datetime-local" class="mt-1 block w-full" :value="old('starts_at', optional($exam->starts_at)->format('Y-m-d\TH:i'))" />
-                                <x-input-error :messages="$errors->get('starts_at')" class="mt-2" />
+                                <x-input-label for="class_room_id" :value="__('Class')" />
+                                <select id="class_room_id" name="class_room_id" class="mt-1 w-full rounded-xl border-slate-200 text-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-950" data-class-room-select>
+                                    <option value="">{{ __('Select class') }}</option>
+                                    @foreach ($classRooms as $classRoom)
+                                        <option value="{{ $classRoom->id }}" @selected(old('class_room_id', $exam->class_room_id) == $classRoom->id)>{{ $classRoom->name }}</option>
+                                    @endforeach
+                                </select>
+                                <x-input-error :messages="$errors->get('class_room_id')" class="mt-2" />
                             </div>
                             <div>
-                                <x-input-label for="ends_at" :value="__('Ends At')" />
-                                <x-text-input id="ends_at" name="ends_at" type="datetime-local" class="mt-1 block w-full" :value="old('ends_at', optional($exam->ends_at)->format('Y-m-d\TH:i'))" />
-                                <x-input-error :messages="$errors->get('ends_at')" class="mt-2" />
+                                <x-input-label for="subject_id" :value="__('Subject')" />
+                                <select id="subject_id" name="subject_id" class="mt-1 w-full rounded-xl border-slate-200 text-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-950" data-subject-select>
+                                    <option value="">{{ __('Select subject') }}</option>
+                                    @php
+                                        $subjectMap = [];
+                                        foreach ($classRooms as $classRoom) {
+                                            foreach ($classRoom->subjects as $subject) {
+                                                $subjectMap[$subject->id]['name'] = $subject->name;
+                                                $subjectMap[$subject->id]['classes'][] = $classRoom->id;
+                                            }
+                                        }
+                                    @endphp
+                                    @foreach ($subjectMap as $subjectId => $subjectData)
+                                        <option value="{{ $subjectId }}"
+                                            data-classes="{{ implode(',', $subjectData['classes'] ?? []) }}"
+                                            @selected(old('subject_id', $exam->subject_id) == $subjectId)>
+                                            {{ $subjectData['name'] }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <x-input-error :messages="$errors->get('subject_id')" class="mt-2" />
                             </div>
                         </div>
 
@@ -78,19 +95,76 @@
                         <li>{{ __('Questions') }}: {{ $exam->questions->count() }}</li>
                         <li>{{ __('Status') }}: {{ $exam->is_published ? __('Published') : __('Draft') }}</li>
                         <li>{{ __('Duration') }}: {{ $exam->duration_minutes ? $exam->duration_minutes.' '.__('minutes') : __('No limit') }}</li>
+                        <li>{{ __('Class') }}: {{ $exam->classRoom?->name ?? __('-') }}</li>
+                        <li>{{ __('Subject') }}: {{ $exam->subject?->name ?? __('-') }}</li>
                     </ul>
                 </div>
             </div>
 
             <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
                 <h3 class="text-lg font-semibold text-slate-900 dark:text-white">{{ __('Questions') }}</h3>
-                <div class="mt-4 space-y-4">
+
+                <form method="POST" action="{{ route('lecturer.questions.store', $exam) }}" class="mt-4 space-y-4">
+                    @csrf
+                    <div class="grid gap-4 sm:grid-cols-2">
+                        <div>
+                            <x-input-label for="type" :value="__('Type')" />
+                            <select id="type" name="type" class="mt-1 w-full rounded-xl border-slate-200 text-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-950" data-question-type>
+                                <option value="mcq" @selected(old('type') === 'mcq')>{{ __('Multiple Choice') }}</option>
+                                <option value="text" @selected(old('type') === 'text')>{{ __('Text') }}</option>
+                            </select>
+                            <x-input-error :messages="$errors->get('type')" class="mt-2" />
+                        </div>
+                        <div>
+                            <x-input-label for="points" :value="__('Points')" />
+                            <x-text-input id="points" name="points" type="number" min="1" class="mt-1 block w-full" :value="old('points', 1)" required />
+                            <x-input-error :messages="$errors->get('points')" class="mt-2" />
+                        </div>
+                    </div>
+
+                    <div>
+                        <x-input-label for="question_text" :value="__('Question')" />
+                        <textarea id="question_text" name="question_text" rows="3" class="mt-1 w-full rounded-xl border-slate-200 focus:border-indigo-500 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-950">{{ old('question_text') }}</textarea>
+                        <x-input-error :messages="$errors->get('question_text')" class="mt-2" />
+                    </div>
+
+                    <div data-choice-fields>
+                        <p class="text-sm font-medium text-slate-700 dark:text-slate-300">{{ __('Choices') }}</p>
+                        <div class="mt-2 grid gap-3 sm:grid-cols-2">
+                            @for ($i = 0; $i < 6; $i++)
+                                <div>
+                                    <x-input-label for="choice_{{ $i }}" :value="__('Choice').' '.($i + 1)" />
+                                    <x-text-input id="choice_{{ $i }}" name="choices[{{ $i }}]" class="mt-1 block w-full" :value="old('choices.'.$i)" />
+                                </div>
+                            @endfor
+                        </div>
+                        <div class="mt-3">
+                            <x-input-label for="correct_choice" :value="__('Correct Choice')" />
+                            <select id="correct_choice" name="correct_choice" class="mt-1 w-full rounded-xl border-slate-200 text-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-950">
+                                @for ($i = 0; $i < 6; $i++)
+                                    <option value="{{ $i }}" @selected(old('correct_choice') == $i)>{{ __('Choice') }} {{ $i + 1 }}</option>
+                                @endfor
+                            </select>
+                            <x-input-error :messages="$errors->get('correct_choice')" class="mt-2" />
+                            <x-input-error :messages="$errors->get('choices')" class="mt-2" />
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-end">
+                        <button type="submit" class="rounded-full bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-500">
+                            {{ __('Add Question') }}
+                        </button>
+                    </div>
+                </form>
+
+                <div class="mt-6 space-y-4">
                     @forelse ($exam->questions as $question)
                         <div class="rounded-xl border border-slate-200 p-4 dark:border-slate-800">
                             <div class="flex flex-wrap items-center justify-between gap-3">
                                 <div>
                                     <p class="font-medium text-slate-900 dark:text-white">{{ $question->question_text }}</p>
                                     <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ __('Points') }}: {{ $question->points }}</p>
+                                    <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ __('Type') }}: {{ strtoupper($question->type) }}</p>
                                 </div>
                                 <div class="flex items-center gap-3">
                                     <a href="{{ route('lecturer.questions.edit', [$exam, $question]) }}" class="text-xs font-semibold text-indigo-600 hover:text-indigo-500">
