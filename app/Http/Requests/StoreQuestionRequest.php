@@ -41,8 +41,11 @@ class StoreQuestionRequest extends FormRequest
                 }
             }
 
-            if ($type === 'text' && ! empty($this->input('choices'))) {
-                $validator->errors()->add('choices', __('Text questions should not have choices.'));
+            if ($type === 'text') {
+                $choices = array_values(array_filter((array) $this->input('choices'), fn ($value) => $value !== null && $value !== ''));
+                if (! empty($choices)) {
+                    $validator->errors()->add('choices', __('Text questions should not have choices.'));
+                }
             }
         });
     }
