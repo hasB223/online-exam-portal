@@ -14,6 +14,12 @@
                     <a href="{{ route('admin.users.index') }}" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">
                         {{ __('Users') }}
                     </a>
+                    <a href="{{ route('admin.classes.index') }}" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">
+                        {{ __('Classes') }}
+                    </a>
+                    <a href="{{ route('admin.subjects.index') }}" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">
+                        {{ __('Subjects') }}
+                    </a>
                 @endif
                 @if(auth()->user()->isLecturer() || auth()->user()->isAdmin())
                     <a href="{{ route('lecturer.exams.index') }}" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">
@@ -82,6 +88,12 @@
             @if(auth()->user()->isAdmin())
                 <a href="{{ route('admin.users.index') }}" class="block text-sm font-medium text-slate-600 dark:text-slate-300">
                     {{ __('Users') }}
+                </a>
+                <a href="{{ route('admin.classes.index') }}" class="block text-sm font-medium text-slate-600 dark:text-slate-300">
+                    {{ __('Classes') }}
+                </a>
+                <a href="{{ route('admin.subjects.index') }}" class="block text-sm font-medium text-slate-600 dark:text-slate-300">
+                    {{ __('Subjects') }}
                 </a>
             @endif
             @if(auth()->user()->isLecturer() || auth()->user()->isAdmin())

@@ -1,9 +1,9 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex flex-wrap items-center justify-between gap-3">
-            <h2 class="text-2xl font-semibold text-slate-900 dark:text-white">{{ __('Manage Users') }}</h2>
-            <a href="{{ route('admin.users.create') }}" class="rounded-full bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-500">
-                {{ __('New User') }}
+            <h2 class="text-2xl font-semibold text-slate-900 dark:text-white">{{ __('Manage Subjects') }}</h2>
+            <a href="{{ route('admin.subjects.create') }}" class="rounded-full bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-500">
+                {{ __('New Subject') }}
             </a>
         </div>
     </x-slot>
@@ -21,25 +21,21 @@
                     <thead class="bg-slate-50 text-xs uppercase tracking-[0.2em] text-slate-400 dark:bg-slate-800">
                         <tr>
                             <th class="px-6 py-4">{{ __('Name') }}</th>
-                            <th class="px-6 py-4">{{ __('Email') }}</th>
-                            <th class="px-6 py-4">{{ __('Role') }}</th>
-                            <th class="px-6 py-4">{{ __('Class') }}</th>
+                            <th class="px-6 py-4">{{ __('Code') }}</th>
                             <th class="px-6 py-4">{{ __('Actions') }}</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($users as $user)
+                        @forelse ($subjects as $subject)
                             <tr class="border-t border-slate-100 dark:border-slate-800">
-                                <td class="px-6 py-4 font-medium text-slate-900 dark:text-white">{{ $user->name }}</td>
-                                <td class="px-6 py-4 text-slate-600 dark:text-slate-300">{{ $user->email }}</td>
-                                <td class="px-6 py-4 text-slate-600 dark:text-slate-300">{{ ucfirst($user->role) }}</td>
-                                <td class="px-6 py-4 text-slate-600 dark:text-slate-300">{{ $user->classRoom?->name ?? __('-') }}</td>
+                                <td class="px-6 py-4 font-medium text-slate-900 dark:text-white">{{ $subject->name }}</td>
+                                <td class="px-6 py-4 text-slate-600 dark:text-slate-300">{{ $subject->code }}</td>
                                 <td class="px-6 py-4">
                                     <div class="flex flex-wrap items-center gap-2">
-                                        <a href="{{ route('admin.users.edit', $user) }}" class="text-xs font-semibold text-indigo-600 hover:text-indigo-500">
+                                        <a href="{{ route('admin.subjects.edit', $subject) }}" class="text-xs font-semibold text-indigo-600 hover:text-indigo-500">
                                             {{ __('Edit') }}
                                         </a>
-                                        <form method="POST" action="{{ route('admin.users.destroy', $user) }}" onsubmit="return confirm('{{ __('Delete this user?') }}')">
+                                        <form method="POST" action="{{ route('admin.subjects.destroy', $subject) }}" onsubmit="return confirm('{{ __('Delete this subject?') }}')">
                                             @csrf
                                             @method('delete')
                                             <button type="submit" class="text-xs font-semibold text-red-600 hover:text-red-500">
@@ -51,8 +47,8 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="px-6 py-6 text-center text-sm text-slate-500 dark:text-slate-400">
-                                    {{ __('No users yet.') }}
+                                <td colspan="3" class="px-6 py-6 text-center text-sm text-slate-500 dark:text-slate-400">
+                                    {{ __('No subjects yet.') }}
                                 </td>
                             </tr>
                         @endforelse

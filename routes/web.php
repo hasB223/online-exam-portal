@@ -47,8 +47,9 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::view('/', 'admin.dashboard')->name('dashboard');
-    Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
-    Route::patch('/users/{user}', [AdminUserController::class, 'update'])->name('users.update');
+    Route::resource('users', AdminUserController::class);
+    Route::resource('classes', \App\Http\Controllers\Admin\ClassRoomController::class);
+    Route::resource('subjects', \App\Http\Controllers\Admin\SubjectController::class);
 });
 
 Route::middleware(['auth', 'role:lecturer,admin'])->prefix('lecturer')->name('lecturer.')->group(function () {
