@@ -89,7 +89,7 @@
                         <div class="rounded-xl border border-slate-200 p-4 dark:border-slate-800">
                             <div class="flex flex-wrap items-center justify-between gap-3">
                                 <div>
-                                    <p class="font-medium text-slate-900 dark:text-white">{{ $question->prompt }}</p>
+                                    <p class="font-medium text-slate-900 dark:text-white">{{ $question->question_text }}</p>
                                     <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">{{ __('Points') }}: {{ $question->points }}</p>
                                 </div>
                                 <div class="flex items-center gap-3">
@@ -105,14 +105,20 @@
                                     </form>
                                 </div>
                             </div>
-                            <div class="mt-3 grid gap-2 text-sm text-slate-600 dark:text-slate-400">
-                                @foreach ($question->options as $index => $option)
-                                    <div class="flex items-center gap-2">
-                                        <span class="h-2 w-2 rounded-full {{ $index === $question->correct_option ? 'bg-emerald-500' : 'bg-slate-300' }}"></span>
-                                        <span>{{ $option }}</span>
-                                    </div>
-                                @endforeach
-                            </div>
+                            @if ($question->type === 'mcq')
+                                <div class="mt-3 grid gap-2 text-sm text-slate-600 dark:text-slate-400">
+                                    @foreach ($question->choices as $choice)
+                                        <div class="flex items-center gap-2">
+                                            <span class="h-2 w-2 rounded-full {{ $choice->is_correct ? 'bg-emerald-500' : 'bg-slate-300' }}"></span>
+                                            <span>{{ $choice->text }}</span>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @else
+                                <p class="mt-3 text-sm text-slate-500 dark:text-slate-400">
+                                    {{ __('Text response') }}
+                                </p>
+                            @endif
                         </div>
                     @empty
                         <p class="text-sm text-slate-500 dark:text-slate-400">

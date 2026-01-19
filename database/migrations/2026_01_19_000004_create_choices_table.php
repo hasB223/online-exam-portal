@@ -8,20 +8,19 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('answers', function (Blueprint $table) {
+        Schema::create('choices', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('exam_attempt_id')->constrained()->cascadeOnDelete();
             $table->foreignId('question_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('selected_choice_id')->nullable()->constrained('choices')->nullOnDelete();
-            $table->text('text_answer')->nullable();
+            $table->text('text');
+            $table->boolean('is_correct')->default(false);
             $table->timestamps();
 
-            $table->unique(['exam_attempt_id', 'question_id']);
+            $table->index(['question_id', 'is_correct']);
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('answers');
+        Schema::dropIfExists('choices');
     }
 };

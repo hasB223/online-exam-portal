@@ -14,6 +14,8 @@ class Exam extends Model
     protected $fillable = [
         'title',
         'description',
+        'subject_id',
+        'class_room_id',
         'starts_at',
         'ends_at',
         'duration_minutes',
@@ -33,6 +35,16 @@ class Exam extends Model
     public function lecturer(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function subject(): BelongsTo
+    {
+        return $this->belongsTo(Subject::class);
+    }
+
+    public function classRoom(): BelongsTo
+    {
+        return $this->belongsTo(ClassRoom::class);
     }
 
     public function questions(): HasMany

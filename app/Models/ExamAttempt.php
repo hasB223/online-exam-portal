@@ -15,15 +15,16 @@ class ExamAttempt extends Model
         'exam_id',
         'user_id',
         'started_at',
+        'ends_at',
         'submitted_at',
-        'score',
-        'total_points',
+        'status',
     ];
 
     protected function casts(): array
     {
         return [
             'started_at' => 'datetime',
+            'ends_at' => 'datetime',
             'submitted_at' => 'datetime',
         ];
     }

@@ -13,17 +13,9 @@ class Answer extends Model
     protected $fillable = [
         'exam_attempt_id',
         'question_id',
-        'selected_option',
-        'is_correct',
-        'points_awarded',
+        'selected_choice_id',
+        'text_answer',
     ];
-
-    protected function casts(): array
-    {
-        return [
-            'is_correct' => 'boolean',
-        ];
-    }
 
     public function attempt(): BelongsTo
     {
@@ -33,5 +25,10 @@ class Answer extends Model
     public function question(): BelongsTo
     {
         return $this->belongsTo(Question::class);
+    }
+
+    public function selectedChoice(): BelongsTo
+    {
+        return $this->belongsTo(Choice::class, 'selected_choice_id');
     }
 }

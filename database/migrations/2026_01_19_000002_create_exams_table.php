@@ -12,12 +12,16 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('description')->nullable();
+            $table->foreignId('subject_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('class_room_id')->constrained()->cascadeOnDelete();
             $table->timestamp('starts_at')->nullable();
             $table->timestamp('ends_at')->nullable();
             $table->unsignedSmallInteger('duration_minutes')->nullable();
             $table->boolean('is_published')->default(false);
             $table->foreignId('created_by')->constrained('users')->cascadeOnDelete();
             $table->timestamps();
+
+            $table->index(['class_room_id', 'subject_id']);
         });
     }
 

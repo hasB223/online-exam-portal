@@ -22,6 +22,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'class_room_id',
     ];
 
     /**
@@ -55,6 +56,11 @@ class User extends Authenticatable
     public function examAttempts()
     {
         return $this->hasMany(ExamAttempt::class);
+    }
+
+    public function classRoom()
+    {
+        return $this->belongsTo(ClassRoom::class);
     }
 
     public function isAdmin(): bool

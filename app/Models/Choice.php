@@ -7,29 +7,30 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Question extends Model
+class Choice extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'exam_id',
-        'type',
-        'question_text',
-        'points',
+        'question_id',
+        'text',
+        'is_correct',
     ];
 
-    public function exam(): BelongsTo
+    protected function casts(): array
     {
-        return $this->belongsTo(Exam::class);
+        return [
+            'is_correct' => 'boolean',
+        ];
     }
 
-    public function choices(): HasMany
+    public function question(): BelongsTo
     {
-        return $this->hasMany(Choice::class);
+        return $this->belongsTo(Question::class);
     }
 
     public function answers(): HasMany
     {
-        return $this->hasMany(Answer::class);
+        return $this->hasMany(Answer::class, 'selected_choice_id');
     }
 }

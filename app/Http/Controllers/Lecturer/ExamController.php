@@ -48,7 +48,7 @@ class ExamController extends Controller
     {
         $this->authorize('update', $exam);
 
-        $exam->load('questions');
+        $exam->load('questions.choices');
 
         return view('lecturer.exams.edit', compact('exam'));
     }
