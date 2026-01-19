@@ -16,8 +16,8 @@
                 </div>
             @endif
 
-            <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
-                <table class="w-full text-left text-sm">
+            <div class="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                <table class="min-w-[720px] text-left text-sm">
                     <thead class="bg-slate-50 text-xs uppercase tracking-[0.2em] text-slate-400 dark:bg-slate-800">
                         <tr>
                             <th class="px-6 py-4">{{ __('Name') }}</th>

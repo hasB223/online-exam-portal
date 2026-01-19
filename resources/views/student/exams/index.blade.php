@@ -22,10 +22,10 @@
                                 {{ $status === 'expired' ? 'bg-rose-100 text-rose-700 dark:bg-rose-900 dark:text-rose-200' : '' }}
                                 {{ $status === 'not_started' ? 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300' : '' }}
                             ">
-                                {{ $status === 'submitted' ? __('Submitted') : '' }}
-                                {{ $status === 'in_progress' ? __('In progress') : '' }}
-                                {{ $status === 'expired' ? __('Expired') : '' }}
-                                {{ $status === 'not_started' ? __('Not started') : '' }}
+                                {{ $status === 'submitted' ? __('ui.status.submitted') : '' }}
+                                {{ $status === 'in_progress' ? __('ui.status.in_progress') : '' }}
+                                {{ $status === 'expired' ? __('ui.status.expired') : '' }}
+                                {{ $status === 'not_started' ? __('ui.status.not_started') : '' }}
                             </span>
                         </div>
                         <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">{{ $exam->description ?? __('No description yet.') }}</p>

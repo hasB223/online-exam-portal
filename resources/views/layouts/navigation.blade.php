@@ -8,27 +8,27 @@
 
             <div class="hidden items-center gap-6 md:flex">
                 <a href="{{ route('dashboard') }}" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">
-                    {{ __('Dashboard') }}
+                    {{ __('ui.nav.dashboard') }}
                 </a>
                 @if(auth()->user()->isAdmin())
                     <a href="{{ route('admin.users.index') }}" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">
-                        {{ __('Users') }}
+                        {{ __('ui.nav.users') }}
                     </a>
                     <a href="{{ route('admin.classes.index') }}" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">
-                        {{ __('Classes') }}
+                        {{ __('ui.nav.classes') }}
                     </a>
                     <a href="{{ route('admin.subjects.index') }}" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">
-                        {{ __('Subjects') }}
+                        {{ __('ui.nav.subjects') }}
                     </a>
                 @endif
                 @if(auth()->user()->isLecturer() || auth()->user()->isAdmin())
                     <a href="{{ route('lecturer.exams.index') }}" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">
-                        {{ __('Manage Exams') }}
+                        {{ __('ui.nav.manage_exams') }}
                     </a>
                 @endif
                 @if(auth()->user()->isStudent())
                     <a href="{{ route('student.exams.index') }}" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">
-                        {{ __('My Exams') }}
+                        {{ __('ui.nav.my_exams') }}
                     </a>
                 @endif
             </div>
@@ -42,7 +42,7 @@
             </div>
 
             <button type="button" data-theme-toggle class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 text-slate-600 transition hover:border-indigo-500 hover:text-indigo-600 dark:border-slate-700 dark:text-slate-300">
-                <span class="sr-only">{{ __('Toggle theme') }}</span>
+                <span class="sr-only">{{ __('ui.nav.toggle_theme') }}</span>
                 <svg data-theme-icon="light" class="hidden h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v2m0 14v2m9-9h-2M5 12H3m15.364-6.364-1.414 1.414M7.05 16.95l-1.414 1.414M16.95 16.95l1.414 1.414M7.05 7.05 5.636 5.636M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z" />
                 </svg>
@@ -60,12 +60,12 @@
                 </button>
                 <div data-dropdown-menu class="absolute right-0 z-20 mt-2 hidden w-48 rounded-2xl border border-slate-200 bg-white p-2 text-sm shadow-xl dark:border-slate-800 dark:bg-slate-950">
                     <a href="{{ route('profile.edit') }}" class="block rounded-xl px-3 py-2 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-900 dark:hover:text-white">
-                        {{ __('Profile') }}
+                        {{ __('ui.nav.profile') }}
                     </a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit" class="w-full rounded-xl px-3 py-2 text-left text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-900 dark:hover:text-white">
-                            {{ __('Log Out') }}
+                            {{ __('ui.nav.logout') }}
                         </button>
                     </form>
                 </div>
@@ -83,27 +83,27 @@
     <div class="hidden border-t border-slate-200 bg-white px-4 py-4 dark:border-slate-800 dark:bg-slate-950 md:hidden" data-mobile-nav>
         <div class="space-y-3">
             <a href="{{ route('dashboard') }}" class="block text-sm font-medium text-slate-600 dark:text-slate-300">
-                {{ __('Dashboard') }}
+                {{ __('ui.nav.dashboard') }}
             </a>
             @if(auth()->user()->isAdmin())
                 <a href="{{ route('admin.users.index') }}" class="block text-sm font-medium text-slate-600 dark:text-slate-300">
-                    {{ __('Users') }}
+                    {{ __('ui.nav.users') }}
                 </a>
                 <a href="{{ route('admin.classes.index') }}" class="block text-sm font-medium text-slate-600 dark:text-slate-300">
-                    {{ __('Classes') }}
+                    {{ __('ui.nav.classes') }}
                 </a>
                 <a href="{{ route('admin.subjects.index') }}" class="block text-sm font-medium text-slate-600 dark:text-slate-300">
-                    {{ __('Subjects') }}
+                    {{ __('ui.nav.subjects') }}
                 </a>
             @endif
             @if(auth()->user()->isLecturer() || auth()->user()->isAdmin())
                 <a href="{{ route('lecturer.exams.index') }}" class="block text-sm font-medium text-slate-600 dark:text-slate-300">
-                    {{ __('Manage Exams') }}
+                    {{ __('ui.nav.manage_exams') }}
                 </a>
             @endif
             @if(auth()->user()->isStudent())
                 <a href="{{ route('student.exams.index') }}" class="block text-sm font-medium text-slate-600 dark:text-slate-300">
-                    {{ __('My Exams') }}
+                    {{ __('ui.nav.my_exams') }}
                 </a>
             @endif
         </div>
@@ -120,7 +120,7 @@
                     {{ __('MS') }}
                 </a>
                 <button type="button" data-theme-toggle class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 text-slate-600 dark:border-slate-800 dark:text-slate-300">
-                    <span class="sr-only">{{ __('Toggle theme') }}</span>
+                    <span class="sr-only">{{ __('ui.nav.toggle_theme') }}</span>
                     <svg data-theme-icon="light" class="hidden h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v2m0 14v2m9-9h-2M5 12H3m15.364-6.364-1.414 1.414M7.05 16.95l-1.414 1.414M16.95 16.95l1.414 1.414M7.05 7.05 5.636 5.636M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z" />
                     </svg>
@@ -130,7 +130,7 @@
                 </button>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button type="submit" class="text-xs font-semibold text-slate-600 dark:text-slate-300">{{ __('Log Out') }}</button>
+                    <button type="submit" class="text-xs font-semibold text-slate-600 dark:text-slate-300">{{ __('ui.nav.logout') }}</button>
                 </form>
             </div>
         </div>
