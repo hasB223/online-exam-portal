@@ -7,6 +7,7 @@ return [
         'classes' => 'Classes',
         'subjects' => 'Subjects',
         'announcements' => 'Announcements',
+        'email_logs' => 'Email Logs',
         'manage_exams' => 'Manage Exams',
         'my_exams' => 'My Exams',
         'profile' => 'Profile',

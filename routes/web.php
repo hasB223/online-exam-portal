@@ -54,6 +54,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('classes', \App\Http\Controllers\Admin\ClassRoomController::class);
     Route::resource('subjects', \App\Http\Controllers\Admin\SubjectController::class);
     Route::resource('announcements', \App\Http\Controllers\Admin\AnnouncementController::class)->except(['show', 'destroy']);
+    Route::get('email-logs', [\App\Http\Controllers\Admin\EmailLogController::class, 'index'])->name('email-logs.index');
 });
 
 Route::middleware(['auth', 'role:lecturer,admin'])->prefix('lecturer')->name('lecturer.')->group(function () {

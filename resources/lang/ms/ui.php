@@ -7,6 +7,7 @@ return [
         'classes' => 'Kelas',
         'subjects' => 'Subjek',
         'announcements' => 'Pengumuman',
+        'email_logs' => 'Log Emel',
         'manage_exams' => 'Urus Peperiksaan',
         'my_exams' => 'Peperiksaan Saya',
         'profile' => 'Profil',
