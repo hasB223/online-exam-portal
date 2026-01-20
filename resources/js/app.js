@@ -158,6 +158,30 @@ const setupPasswordResetToggle = () => {
     });
 };
 
+const setupPublishNotifyToggle = () => {
+    document.querySelectorAll('[data-publish-toggle]').forEach((checkbox) => {
+        const container = checkbox.closest('div');
+        const notify = container?.querySelector('[data-notify-toggle]');
+        if (!notify) {
+            return;
+        }
+
+        const update = () => {
+            const isPublished = checkbox.checked;
+            notify.classList.toggle('hidden', !isPublished);
+            if (!isPublished) {
+                const notifyInput = notify.querySelector('input[type="checkbox"]');
+                if (notifyInput) {
+                    notifyInput.checked = false;
+                }
+            }
+        };
+
+        update();
+        checkbox.addEventListener('change', update);
+    });
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('[data-theme-toggle]').forEach((button) => {
         button.addEventListener('click', toggleTheme);
@@ -171,4 +195,5 @@ document.addEventListener('DOMContentLoaded', () => {
     setupClassSubjectFilter();
     setupQuestionTypeToggle();
     setupPasswordResetToggle();
+    setupPublishNotifyToggle();
 });

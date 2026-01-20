@@ -5,7 +5,11 @@ namespace App\Http\Controllers\Lecturer;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreExamRequest;
 use App\Http\Requests\UpdateExamRequest;
+use App\Mail\ExamPublishedMail;
 use App\Models\Exam;
+use App\Models\EmailLog;
+use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 
 class ExamController extends Controller
 {
@@ -45,6 +49,54 @@ class ExamController extends Controller
             'created_by' => $request->user()->id,
         ]);
 
+        $shouldNotify = $request->boolean('notify_students');
+
+        if ($exam->is_published && $shouldNotify) {
+            $students = User::query()
+                ->where('role', 'student')
+                ->where('class_room_id', $exam->class_room_id)
+                ->get();
+
+            $exam->loadMissing('subject');
+            $examsUrl = url('/student/exams');
+
+            foreach ($students as $student) {
+                try {
+                    Mail::to($student->email)->send(new ExamPublishedMail($exam, $student, $examsUrl));
+
+                    EmailLog::create([
+                        'type' => 'exam_published',
+                        'to_email' => $student->email,
+                        'to_user_id' => $student->id,
+                        'subject' => 'New exam published: '.$exam->title,
+                        'status' => 'sent',
+                        'meta' => [
+                            'exam_id' => $exam->id,
+                            'class_room_id' => $exam->class_room_id,
+                            'subject_id' => $exam->subject_id,
+                        ],
+                        'sent_at' => now(),
+                        'created_by' => $request->user()->id,
+                    ]);
+                } catch (\Throwable $exception) {
+                    EmailLog::create([
+                        'type' => 'exam_published',
+                        'to_email' => $student->email,
+                        'to_user_id' => $student->id,
+                        'subject' => 'New exam published: '.$exam->title,
+                        'status' => 'failed',
+                        'error_message' => $exception->getMessage(),
+                        'meta' => [
+                            'exam_id' => $exam->id,
+                            'class_room_id' => $exam->class_room_id,
+                            'subject_id' => $exam->subject_id,
+                        ],
+                        'created_by' => $request->user()->id,
+                    ]);
+                }
+            }
+        }
+
         return redirect()
             ->route('lecturer.exams.edit', $exam)
             ->with('status', __('Exam created.'));
@@ -68,10 +120,60 @@ class ExamController extends Controller
     {
         $this->authorize('update', $exam);
 
+        $wasPublished = $exam->is_published;
+
         $exam->update([
             ...$request->validated(),
             'is_published' => (bool) $request->input('is_published'),
         ]);
+
+        $shouldNotify = $request->boolean('notify_students');
+
+        if (! $wasPublished && $exam->is_published && $shouldNotify) {
+            $students = User::query()
+                ->where('role', 'student')
+                ->where('class_room_id', $exam->class_room_id)
+                ->get();
+
+            $exam->loadMissing('subject');
+            $examsUrl = url('/student/exams');
+
+            foreach ($students as $student) {
+                try {
+                    Mail::to($student->email)->send(new ExamPublishedMail($exam, $student, $examsUrl));
+
+                    EmailLog::create([
+                        'type' => 'exam_published',
+                        'to_email' => $student->email,
+                        'to_user_id' => $student->id,
+                        'subject' => 'New exam published: '.$exam->title,
+                        'status' => 'sent',
+                        'meta' => [
+                            'exam_id' => $exam->id,
+                            'class_room_id' => $exam->class_room_id,
+                            'subject_id' => $exam->subject_id,
+                        ],
+                        'sent_at' => now(),
+                        'created_by' => $request->user()->id,
+                    ]);
+                } catch (\Throwable $exception) {
+                    EmailLog::create([
+                        'type' => 'exam_published',
+                        'to_email' => $student->email,
+                        'to_user_id' => $student->id,
+                        'subject' => 'New exam published: '.$exam->title,
+                        'status' => 'failed',
+                        'error_message' => $exception->getMessage(),
+                        'meta' => [
+                            'exam_id' => $exam->id,
+                            'class_room_id' => $exam->class_room_id,
+                            'subject_id' => $exam->subject_id,
+                        ],
+                        'created_by' => $request->user()->id,
+                    ]);
+                }
+            }
+        }
 
         return redirect()
             ->route('lecturer.exams.edit', $exam)

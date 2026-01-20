@@ -81,10 +81,19 @@
                                 <x-text-input id="duration_minutes" name="duration_minutes" type="number" min="1" class="mt-1 block w-full" :value="old('duration_minutes', $exam->duration_minutes)" />
                                 <x-input-error :messages="$errors->get('duration_minutes')" class="mt-2" />
                             </div>
-                            <label class="mt-7 inline-flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
-                                <input type="checkbox" name="is_published" value="1" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 dark:border-slate-700" @checked(old('is_published', $exam->is_published)) />
-                                {{ __('Published') }}
-                            </label>
+                            <div class="mt-7 flex flex-col items-start gap-3 md:flex-row md:flex-wrap md:items-center md:gap-6">
+                                <label class="inline-flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
+                                    <input type="checkbox" name="is_published" value="1" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 dark:border-slate-700" @checked(old('is_published', $exam->is_published)) data-publish-toggle />
+                                    <span>{{ __('Published') }}</span>
+                                </label>
+                                @if (! $exam->is_published)
+                                    <label class="hidden md:inline-flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300 md:max-w-[220px]" data-notify-toggle>
+                                        <input type="checkbox" name="notify_students" value="1"
+                                            class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 dark:border-slate-700" />
+                                        <span class="leading-snug">{{ __('Notify students when publishing') }}</span>
+                                    </label>
+                                @endif
+                            </div>
                         </div>
 
                         <div class="flex items-center justify-end gap-3">
