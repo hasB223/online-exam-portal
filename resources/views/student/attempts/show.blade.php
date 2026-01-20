@@ -6,12 +6,21 @@
             </h2>
             @if ($attempt->isSubmitted())
                 <div class="flex flex-wrap items-center gap-2">
-                    <span class="rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-700 dark:bg-emerald-900 dark:text-emerald-200">
-                        {{ __('Auto score') }} {{ $attempt->auto_score ?? 0 }} / {{ $attempt->auto_total_points ?? 0 }}
-                    </span>
-                    <span class="rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-600 dark:bg-slate-800 dark:text-slate-300">
-                        {{ __('Text answers recorded') }}: {{ $attempt->text_pending_count ?? 0 }}
-                    </span>
+                    @if ($attempt->isGraded())
+                        <span class="rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-700 dark:bg-emerald-900 dark:text-emerald-200">
+                            {{ __('Final score') }} {{ $attempt->final_score ?? 0 }} / {{ $attempt->final_total_points ?? 0 }}
+                        </span>
+                    @else
+                        <span class="rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-700 dark:bg-emerald-900 dark:text-emerald-200">
+                            {{ __('Auto score') }} {{ $attempt->auto_score ?? 0 }} / {{ $attempt->auto_total_points ?? 0 }}
+                        </span>
+                        <span class="rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+                            {{ __('Text answers recorded') }}: {{ $attempt->text_pending_count ?? 0 }}
+                        </span>
+                        <span class="rounded-full bg-amber-100 px-4 py-2 text-sm font-semibold text-amber-700 dark:bg-amber-900 dark:text-amber-200">
+                            {{ __('Pending grading') }}
+                        </span>
+                    @endif
                 </div>
             @endif
         </div>

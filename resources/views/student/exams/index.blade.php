@@ -38,7 +38,31 @@
                             <a href="{{ route('student.exams.show', $exam) }}" class="rounded-full border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-600 transition hover:border-indigo-500 hover:text-indigo-600 dark:border-slate-700 dark:text-slate-300">
                                 {{ __('View Details') }}
                             </a>
+                            @if ($attempt)
+                                <a href="{{ route('student.attempts.show', $attempt) }}" class="rounded-full border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-600 transition hover:border-indigo-500 hover:text-indigo-600 dark:border-slate-700 dark:text-slate-300">
+                                    {{ __('Show Attempt') }}
+                                </a>
+                            @endif
                         </div>
+                        @if ($attempt?->isSubmitted())
+                            <div class="mt-4 flex flex-wrap gap-2 text-xs">
+                                @if ($attempt->isGraded())
+                                    <span class="rounded-full bg-emerald-100 px-3 py-1 font-semibold text-emerald-700 dark:bg-emerald-900 dark:text-emerald-200">
+                                        {{ __('Final score') }} {{ $attempt->final_score ?? 0 }} / {{ $attempt->final_total_points ?? 0 }}
+                                    </span>
+                                @else
+                                    <span class="rounded-full bg-emerald-100 px-3 py-1 font-semibold text-emerald-700 dark:bg-emerald-900 dark:text-emerald-200">
+                                        {{ __('Auto score') }} {{ $attempt->auto_score ?? 0 }} / {{ $attempt->auto_total_points ?? 0 }}
+                                    </span>
+                                    <span class="rounded-full bg-slate-100 px-3 py-1 font-semibold text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+                                        {{ __('Text answers recorded') }}: {{ $attempt->text_pending_count ?? 0 }}
+                                    </span>
+                                    <span class="rounded-full bg-amber-100 px-3 py-1 font-semibold text-amber-700 dark:bg-amber-900 dark:text-amber-200">
+                                        {{ __('Pending grading') }}
+                                    </span>
+                                @endif
+                            </div>
+                        @endif
                     </div>
                 @empty
                     <div class="rounded-2xl border border-dashed border-slate-300 bg-white p-8 text-center text-sm text-slate-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400">

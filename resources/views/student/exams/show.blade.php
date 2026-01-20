@@ -22,10 +22,16 @@
                         <span class="rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-700 dark:bg-emerald-900 dark:text-emerald-200">
                             {{ __('Submitted') }}
                         </span>
+                        <a href="{{ route('student.attempts.show', $attempt) }}" class="rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 transition hover:border-indigo-500 hover:text-indigo-600 dark:border-slate-700 dark:text-slate-300">
+                            {{ __('Show Attempt') }}
+                        </a>
                     @elseif ($attempt?->isExpired())
                         <span class="rounded-full bg-rose-100 px-4 py-2 text-sm font-semibold text-rose-700 dark:bg-rose-900 dark:text-rose-200">
                             {{ __('Expired') }}
                         </span>
+                        <a href="{{ route('student.attempts.show', $attempt) }}" class="rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 transition hover:border-indigo-500 hover:text-indigo-600 dark:border-slate-700 dark:text-slate-300">
+                            {{ __('Show Attempt') }}
+                        </a>
                     @else
                         <form method="POST" action="{{ route('student.exams.start', $exam) }}">
                             @csrf

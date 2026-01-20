@@ -18,6 +18,15 @@
                 </div>
             @endif
 
+            <div class="flex flex-wrap items-center justify-between gap-3">
+                <div class="text-sm text-slate-600 dark:text-slate-400">
+                    {{ __('Review student attempts or continue editing the exam.') }}
+                </div>
+                <a href="{{ route('lecturer.exams.attempts.index', $exam) }}" class="rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 transition hover:border-indigo-500 hover:text-indigo-600 dark:border-slate-700 dark:text-slate-300">
+                    {{ __('View Attempts') }}
+                </a>
+            </div>
+
             <div class="grid gap-6 lg:grid-cols-[2fr,1fr]">
                 <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
                     <form method="POST" action="{{ route('lecturer.exams.update', $exam) }}" class="space-y-6">

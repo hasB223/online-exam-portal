@@ -15,6 +15,7 @@ class Answer extends Model
         'question_id',
         'selected_choice_id',
         'text_answer',
+        'text_score',
     ];
 
     public function attempt(): BelongsTo

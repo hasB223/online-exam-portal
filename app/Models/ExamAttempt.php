@@ -21,6 +21,12 @@ class ExamAttempt extends Model
         'auto_score',
         'auto_total_points',
         'text_pending_count',
+        'text_score',
+        'text_total_points',
+        'final_score',
+        'final_total_points',
+        'graded_at',
+        'graded_by',
     ];
 
     protected function casts(): array
@@ -29,6 +35,7 @@ class ExamAttempt extends Model
             'started_at' => 'datetime',
             'ends_at' => 'datetime',
             'submitted_at' => 'datetime',
+            'graded_at' => 'datetime',
         ];
     }
 
@@ -55,5 +62,15 @@ class ExamAttempt extends Model
     public function isExpired(): bool
     {
         return $this->status === 'expired';
+    }
+
+    public function grader()
+    {
+        return $this->belongsTo(User::class, 'graded_by');
+    }
+
+    public function isGraded(): bool
+    {
+        return $this->graded_at !== null;
     }
 }

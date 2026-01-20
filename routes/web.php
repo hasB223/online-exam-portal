@@ -55,6 +55,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 Route::middleware(['auth', 'role:lecturer,admin'])->prefix('lecturer')->name('lecturer.')->group(function () {
     Route::view('/', 'lecturer.dashboard')->name('dashboard');
     Route::resource('exams', LecturerExamController::class)->except(['show']);
+    Route::get('exams/{exam}/attempts', [\App\Http\Controllers\Lecturer\AttemptController::class, 'index'])->name('exams.attempts.index');
+    Route::get('attempts/{attempt}', [\App\Http\Controllers\Lecturer\AttemptController::class, 'show'])->name('attempts.show');
+    Route::put('attempts/{attempt}', [\App\Http\Controllers\Lecturer\AttemptController::class, 'update'])->name('attempts.update');
     Route::get('exams/{exam}/questions/create', [LecturerQuestionController::class, 'create'])->name('questions.create');
     Route::post('exams/{exam}/questions', [LecturerQuestionController::class, 'store'])->name('questions.store');
     Route::get('exams/{exam}/questions/{question}/edit', [LecturerQuestionController::class, 'edit'])->name('questions.edit');
