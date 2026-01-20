@@ -46,14 +46,21 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::view('/', 'admin.dashboard')->name('dashboard');
+    Route::get('/', function () {
+        $announcements = \App\Models\Announcement::visibleTo(request()->user())->get();
+        return view('admin.dashboard', compact('announcements'));
+    })->name('dashboard');
     Route::resource('users', AdminUserController::class);
     Route::resource('classes', \App\Http\Controllers\Admin\ClassRoomController::class);
     Route::resource('subjects', \App\Http\Controllers\Admin\SubjectController::class);
+    Route::resource('announcements', \App\Http\Controllers\Admin\AnnouncementController::class)->except(['show', 'destroy']);
 });
 
 Route::middleware(['auth', 'role:lecturer,admin'])->prefix('lecturer')->name('lecturer.')->group(function () {
-    Route::view('/', 'lecturer.dashboard')->name('dashboard');
+    Route::get('/', function () {
+        $announcements = \App\Models\Announcement::visibleTo(request()->user())->get();
+        return view('lecturer.dashboard', compact('announcements'));
+    })->name('dashboard');
     Route::resource('exams', LecturerExamController::class)->except(['show']);
     Route::get('exams/{exam}/attempts', [\App\Http\Controllers\Lecturer\AttemptController::class, 'index'])->name('exams.attempts.index');
     Route::get('attempts/{attempt}', [\App\Http\Controllers\Lecturer\AttemptController::class, 'show'])->name('attempts.show');
@@ -66,7 +73,10 @@ Route::middleware(['auth', 'role:lecturer,admin'])->prefix('lecturer')->name('le
 });
 
 Route::middleware(['auth', 'role:student'])->prefix('student')->name('student.')->group(function () {
-    Route::view('/', 'student.dashboard')->name('dashboard');
+    Route::get('/', function () {
+        $announcements = \App\Models\Announcement::visibleTo(request()->user())->get();
+        return view('student.dashboard', compact('announcements'));
+    })->name('dashboard');
     Route::get('/exams', [StudentExamController::class, 'index'])->name('exams.index');
     Route::get('/exams/{exam}', [StudentExamController::class, 'show'])->name('exams.show');
     Route::post('/exams/{exam}/start', [ExamAttemptController::class, 'start'])->name('exams.start');
