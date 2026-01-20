@@ -6,6 +6,7 @@ return [
         'users' => 'Users',
         'classes' => 'Classes',
         'subjects' => 'Subjects',
+        'announcements' => 'Announcements',
         'manage_exams' => 'Manage Exams',
         'my_exams' => 'My Exams',
         'profile' => 'Profile',

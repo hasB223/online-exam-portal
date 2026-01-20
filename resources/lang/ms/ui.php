@@ -6,6 +6,7 @@ return [
         'users' => 'Pengguna',
         'classes' => 'Kelas',
         'subjects' => 'Subjek',
+        'announcements' => 'Pengumuman',
         'manage_exams' => 'Urus Peperiksaan',
         'my_exams' => 'Peperiksaan Saya',
         'profile' => 'Profil',

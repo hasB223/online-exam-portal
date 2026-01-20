@@ -20,6 +20,9 @@
                     <a href="{{ route('admin.subjects.index') }}" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">
                         {{ __('ui.nav.subjects') }}
                     </a>
+                    <a href="{{ route('admin.announcements.index') }}" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">
+                        {{ __('ui.nav.announcements') }}
+                    </a>
                 @endif
                 @if(auth()->user()->isLecturer() || auth()->user()->isAdmin())
                     <a href="{{ route('lecturer.exams.index') }}" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">
@@ -94,6 +97,9 @@
                 </a>
                 <a href="{{ route('admin.subjects.index') }}" class="block text-sm font-medium text-slate-600 dark:text-slate-300">
                     {{ __('ui.nav.subjects') }}
+                </a>
+                <a href="{{ route('admin.announcements.index') }}" class="block text-sm font-medium text-slate-600 dark:text-slate-300">
+                    {{ __('ui.nav.announcements') }}
                 </a>
             @endif
             @if(auth()->user()->isLecturer() || auth()->user()->isAdmin())
