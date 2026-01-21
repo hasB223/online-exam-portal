@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Lecturer;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreExamCloneRequest;
 use App\Http\Requests\StoreExamRequest;
 use App\Http\Requests\UpdateExamRequest;
 use App\Mail\ExamPublishedMail;
 use App\Models\Exam;
 use App\Models\EmailLog;
+use App\Models\Question;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
 class ExamController extends Controller
@@ -37,6 +40,61 @@ class ExamController extends Controller
             ->get();
 
         return view('lecturer.exams.create', compact('classRooms'));
+    }
+
+    public function clone(Exam $exam)
+    {
+        $this->authorize('update', $exam);
+
+        $classRooms = \App\Models\ClassRoom::query()
+            ->with('subjects')
+            ->orderBy('name')
+            ->get();
+
+        return view('lecturer.exams.clone', compact('exam', 'classRooms'));
+    }
+
+    public function storeClone(StoreExamCloneRequest $request, Exam $exam)
+    {
+        $this->authorize('update', $exam);
+
+        $data = $request->validated();
+
+        $clonedExam = DB::transaction(function () use ($data, $exam, $request) {
+            $newExam = Exam::create([
+                'title' => $data['title'],
+                'class_room_id' => $data['class_room_id'],
+                'subject_id' => $data['subject_id'],
+                'duration_minutes' => $data['duration_minutes'] ?? null,
+                'is_published' => false,
+                'created_by' => $request->user()->id,
+            ]);
+
+            $exam->loadMissing('questions.choices');
+
+            foreach ($exam->questions as $question) {
+                $newQuestion = $newExam->questions()->create([
+                    'type' => $question->type,
+                    'question_text' => $question->question_text,
+                    'points' => $question->points,
+                ]);
+
+                if ($question->type === 'mcq') {
+                    foreach ($question->choices as $choice) {
+                        $newQuestion->choices()->create([
+                            'text' => $choice->text,
+                            'is_correct' => $choice->is_correct,
+                        ]);
+                    }
+                }
+            }
+
+            return $newExam;
+        });
+
+        return redirect()
+            ->route('lecturer.exams.edit', $clonedExam)
+            ->with('status', __('Exam cloned.'));
     }
 
     public function store(StoreExamRequest $request)

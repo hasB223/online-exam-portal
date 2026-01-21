@@ -117,6 +117,8 @@ Route::middleware(['auth', 'role:lecturer,admin'])->prefix('lecturer')->name('le
         ));
     })->name('dashboard');
     Route::resource('exams', LecturerExamController::class)->except(['show']);
+    Route::get('exams/{exam}/clone', [LecturerExamController::class, 'clone'])->name('exams.clone');
+    Route::post('exams/{exam}/clone', [LecturerExamController::class, 'storeClone'])->name('exams.clone.store');
     Route::get('exams/{exam}/attempts', [\App\Http\Controllers\Lecturer\AttemptController::class, 'index'])->name('exams.attempts.index');
     Route::get('attempts/{attempt}', [\App\Http\Controllers\Lecturer\AttemptController::class, 'show'])->name('attempts.show');
     Route::put('attempts/{attempt}', [\App\Http\Controllers\Lecturer\AttemptController::class, 'update'])->name('attempts.update');

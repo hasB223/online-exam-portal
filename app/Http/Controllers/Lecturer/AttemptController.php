@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\GradeAttemptRequest;
 use App\Models\Exam;
 use App\Models\ExamAttempt;
+use App\Models\User;
+use App\Services\ExamAttemptGuard;
 use Illuminate\Support\Facades\DB;
 
 class AttemptController extends Controller
@@ -14,13 +16,35 @@ class AttemptController extends Controller
     {
         $this->authorize('update', $exam);
 
-        $attempts = ExamAttempt::query()
-            ->with(['student', 'grader'])
-            ->where('exam_id', $exam->id)
-            ->latest('submitted_at')
-            ->get();
+        $students = User::query()
+            ->where('role', 'student')
+            ->where('class_room_id', $exam->class_room_id)
+            ->orderBy('name')
+            ->get(['id', 'name', 'email']);
 
-        return view('lecturer.attempts.index', compact('exam', 'attempts'));
+        $attemptsByStudent = ExamAttempt::query()
+            ->where('exam_id', $exam->id)
+            ->get()
+            ->keyBy('user_id');
+
+        $guard = app(ExamAttemptGuard::class);
+
+        $attemptsByStudent->each(function (ExamAttempt $attempt) use ($guard) {
+            $guard->enforceExpiry($attempt);
+        });
+
+        $students = $students
+            ->sortByDesc(function (User $student) use ($attemptsByStudent) {
+                $attempt = $attemptsByStudent->get($student->id);
+                return $attempt?->submitted_at?->timestamp ?? 0;
+            })
+            ->values();
+
+        $submittedCount = $attemptsByStudent->filter(function (ExamAttempt $attempt) {
+            return $attempt->status === 'submitted' || $attempt->submitted_at !== null;
+        })->count();
+
+        return view('lecturer.attempts.index', compact('exam', 'students', 'attemptsByStudent', 'submittedCount'));
     }
 
     public function show(ExamAttempt $attempt)
