@@ -6,6 +6,8 @@ use App\Http\Controllers\Lecturer\QuestionController as LecturerQuestionControll
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Student\ExamAttemptController;
 use App\Http\Controllers\Student\ExamController as StudentExamController;
+use App\Models\Exam;
+use App\Models\ExamAttempt;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 
@@ -77,8 +79,42 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
 Route::middleware(['auth', 'role:lecturer,admin'])->prefix('lecturer')->name('lecturer.')->group(function () {
     Route::get('/', function () {
-        $announcements = \App\Models\Announcement::visibleTo(request()->user())->get();
-        return view('lecturer.dashboard', compact('announcements'));
+        $user = request()->user();
+
+        $announcements = \App\Models\Announcement::visibleTo($user)->get();
+
+        $publishedCount = Exam::query()
+            ->where('created_by', $user->id)
+            ->where('is_published', true)
+            ->count();
+
+        $draftCount = Exam::query()
+            ->where('created_by', $user->id)
+            ->where('is_published', false)
+            ->count();
+
+        $needsGradingCount = ExamAttempt::query()
+            ->where('status', 'submitted')
+            ->whereNull('graded_at')
+            ->where('text_pending_count', '>', 0)
+            ->whereHas('exam', fn ($query) => $query->where('created_by', $user->id))
+            ->count();
+
+        $recentAttempts = ExamAttempt::query()
+            ->with(['exam:id,title,created_by', 'student:id,name'])
+            ->where('status', 'submitted')
+            ->whereHas('exam', fn ($query) => $query->where('created_by', $user->id))
+            ->orderByDesc('submitted_at')
+            ->limit(8)
+            ->get();
+
+        return view('lecturer.dashboard', compact(
+            'announcements',
+            'publishedCount',
+            'draftCount',
+            'needsGradingCount',
+            'recentAttempts'
+        ));
     })->name('dashboard');
     Route::resource('exams', LecturerExamController::class)->except(['show']);
     Route::get('exams/{exam}/attempts', [\App\Http\Controllers\Lecturer\AttemptController::class, 'index'])->name('exams.attempts.index');
