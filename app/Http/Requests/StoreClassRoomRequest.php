@@ -16,6 +16,8 @@ class StoreClassRoomRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'code' => ['required', 'string', 'max:50', 'unique:class_rooms,code'],
+            'subjects' => ['required', 'array', 'min:1'],
+            'subjects.*' => ['integer', 'exists:subjects,id'],
         ];
     }
 }

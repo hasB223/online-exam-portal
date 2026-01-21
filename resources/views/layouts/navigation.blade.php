@@ -27,7 +27,7 @@
                         {{ __('ui.nav.email_logs') }}
                     </a>
                 @endif
-                @if(auth()->user()->isLecturer() || auth()->user()->isAdmin())
+                @if(auth()->user()->isLecturer())
                     <a href="{{ route('lecturer.exams.index') }}" class="text-sm font-medium text-slate-600 transition hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">
                         {{ __('ui.nav.manage_exams') }}
                     </a>
@@ -108,7 +108,7 @@
                     {{ __('ui.nav.email_logs') }}
                 </a>
             @endif
-            @if(auth()->user()->isLecturer() || auth()->user()->isAdmin())
+            @if(auth()->user()->isLecturer())
                 <a href="{{ route('lecturer.exams.index') }}" class="block text-sm font-medium text-slate-600 dark:text-slate-300">
                     {{ __('ui.nav.manage_exams') }}
                 </a>

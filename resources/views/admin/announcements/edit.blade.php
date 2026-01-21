@@ -1,8 +1,10 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="text-2xl font-semibold text-slate-900 dark:text-white">{{ __('Edit Announcement') }}</h2>
-    </x-slot>
+@extends('layouts.admin')
 
+@section('header')
+    {{ __('Edit Announcement') }}
+@endsection
+
+@section('content')
     <div class="py-10">
         <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
             <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
@@ -63,4 +65,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+@endsection

@@ -1,13 +1,15 @@
-<x-app-layout>
-    <x-slot name="header">
-        <div class="flex flex-wrap items-center justify-between gap-3">
-            <h2 class="text-2xl font-semibold text-slate-900 dark:text-white">{{ __('Manage Users') }}</h2>
-            <a href="{{ route('admin.users.create') }}" class="rounded-full bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-500">
-                {{ __('New User') }}
-            </a>
-        </div>
-    </x-slot>
+@extends('layouts.admin')
 
+@section('header')
+    <div class="flex flex-wrap items-center justify-between gap-3">
+        <span>{{ __('Manage Users') }}</span>
+        <a href="{{ route('admin.users.create') }}" class="rounded-full bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-500">
+            {{ __('New User') }}
+        </a>
+    </div>
+@endsection
+
+@section('content')
     <div class="py-10">
         <div class="mx-auto max-w-6xl space-y-6 px-4 sm:px-6 lg:px-8">
             @if (session('status'))
@@ -101,4 +103,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+@endsection

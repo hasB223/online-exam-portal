@@ -182,6 +182,47 @@ const setupPublishNotifyToggle = () => {
     });
 };
 
+const setupAdminSidebar = () => {
+    const toggles = document.querySelectorAll('[data-admin-sidebar-toggle]');
+    const sidebar = document.querySelector('[data-admin-sidebar]');
+    const backdrop = document.querySelector('[data-admin-sidebar-backdrop]');
+
+    if (!toggles.length || !sidebar || !backdrop) {
+        return;
+    }
+
+    const open = () => {
+        sidebar.classList.add('translate-x-0');
+        sidebar.classList.remove('-translate-x-full');
+        backdrop.classList.remove('hidden');
+        toggles.forEach((toggle) => toggle.setAttribute('aria-expanded', 'true'));
+    };
+
+    const close = () => {
+        sidebar.classList.add('-translate-x-full');
+        sidebar.classList.remove('translate-x-0');
+        backdrop.classList.add('hidden');
+        toggles.forEach((toggle) => toggle.setAttribute('aria-expanded', 'false'));
+    };
+
+    toggles.forEach((toggle) => {
+        toggle.addEventListener('click', () => {
+            if (sidebar.classList.contains('translate-x-0')) {
+                close();
+            } else {
+                open();
+            }
+        });
+    });
+
+    backdrop.addEventListener('click', close);
+    window.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            close();
+        }
+    });
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('[data-theme-toggle]').forEach((button) => {
         button.addEventListener('click', toggleTheme);
@@ -196,4 +237,5 @@ document.addEventListener('DOMContentLoaded', () => {
     setupQuestionTypeToggle();
     setupPasswordResetToggle();
     setupPublishNotifyToggle();
+    setupAdminSidebar();
 });

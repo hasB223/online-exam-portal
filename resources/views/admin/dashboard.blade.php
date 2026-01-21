@@ -1,10 +1,10 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="text-2xl font-semibold text-slate-900 dark:text-white">
-            {{ __('Admin Dashboard') }}
-        </h2>
-    </x-slot>
+@extends('layouts.admin')
 
+@section('header')
+    {{ __('Admin Dashboard') }}
+@endsection
+
+@section('content')
     <div class="py-10">
         <div class="mx-auto max-w-5xl space-y-6 px-4 sm:px-6 lg:px-8">
             @if ($announcements->isNotEmpty())
@@ -35,4 +35,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+@endsection

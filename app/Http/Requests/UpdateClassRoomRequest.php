@@ -22,6 +22,8 @@ class UpdateClassRoomRequest extends FormRequest
                 'max:50',
                 Rule::unique('class_rooms', 'code')->ignore($this->route('class')->id),
             ],
+            'subjects' => ['required', 'array', 'min:1'],
+            'subjects.*' => ['integer', 'exists:subjects,id'],
         ];
     }
 }
