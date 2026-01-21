@@ -1,28 +1,36 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex flex-wrap items-center justify-between gap-3">
-            <h2 class="text-2xl font-semibold text-slate-900 dark:text-white">
-                {{ $attempt->exam->title }}
-            </h2>
-            @if ($attempt->isSubmitted())
-                <div class="flex flex-wrap items-center gap-2">
-                    @if ($attempt->isGraded())
-                        <span class="rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-700 dark:bg-emerald-900 dark:text-emerald-200">
-                            {{ __('Final score') }} {{ $attempt->final_score ?? 0 }} / {{ $attempt->final_total_points ?? 0 }}
-                        </span>
-                    @else
-                        <span class="rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-700 dark:bg-emerald-900 dark:text-emerald-200">
-                            {{ __('Auto score') }} {{ $attempt->auto_score ?? 0 }} / {{ $attempt->auto_total_points ?? 0 }}
-                        </span>
-                        <span class="rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-600 dark:bg-slate-800 dark:text-slate-300">
-                            {{ __('Text answers recorded') }}: {{ $attempt->text_pending_count ?? 0 }}
-                        </span>
-                        <span class="rounded-full bg-amber-100 px-4 py-2 text-sm font-semibold text-amber-700 dark:bg-amber-900 dark:text-amber-200">
-                            {{ __('Pending grading') }}
-                        </span>
-                    @endif
-                </div>
-            @endif
+        <div class="space-y-2">
+            <x-breadcrumbs :items="[
+                ['label' => __('Dashboard'), 'url' => route('student.dashboard')],
+                ['label' => __('Exams'), 'url' => route('student.exams.index')],
+                ['label' => $attempt->exam->title, 'url' => route('student.exams.show', $attempt->exam)],
+                ['label' => __('Attempt'), 'url' => null],
+            ]" />
+            <div class="flex flex-wrap items-center justify-between gap-3">
+                <h2 class="text-2xl font-semibold text-slate-900 dark:text-white">
+                    {{ $attempt->exam->title }}
+                </h2>
+                @if ($attempt->isSubmitted())
+                    <div class="flex flex-wrap items-center gap-2">
+                        @if ($attempt->isGraded())
+                            <span class="rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-700 dark:bg-emerald-900 dark:text-emerald-200">
+                                {{ __('Final score') }} {{ $attempt->final_score ?? 0 }} / {{ $attempt->final_total_points ?? 0 }}
+                            </span>
+                        @else
+                            <span class="rounded-full bg-emerald-100 px-4 py-2 text-sm font-semibold text-emerald-700 dark:bg-emerald-900 dark:text-emerald-200">
+                                {{ __('Auto score') }} {{ $attempt->auto_score ?? 0 }} / {{ $attempt->auto_total_points ?? 0 }}
+                            </span>
+                            <span class="rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+                                {{ __('Text answers recorded') }}: {{ $attempt->text_pending_count ?? 0 }}
+                            </span>
+                            <span class="rounded-full bg-amber-100 px-4 py-2 text-sm font-semibold text-amber-700 dark:bg-amber-900 dark:text-amber-200">
+                                {{ __('Pending grading') }}
+                            </span>
+                        @endif
+                    </div>
+                @endif
+            </div>
         </div>
     </x-slot>
 

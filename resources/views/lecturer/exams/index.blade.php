@@ -1,8 +1,14 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="text-2xl font-semibold text-slate-900 dark:text-white">
-            {{ __('Manage Exams') }}
-        </h2>
+        <div class="space-y-2">
+            <x-breadcrumbs :items="[
+                ['label' => __('Dashboard'), 'url' => route('lecturer.dashboard')],
+                ['label' => __('Manage Exams'), 'url' => route('lecturer.exams.index')],
+            ]" />
+            <h2 class="text-2xl font-semibold text-slate-900 dark:text-white">
+                {{ __('Manage Exams') }}
+            </h2>
+        </div>
     </x-slot>
 
     <div class="py-10">

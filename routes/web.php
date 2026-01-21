@@ -120,6 +120,7 @@ Route::middleware(['auth', 'role:lecturer,admin'])->prefix('lecturer')->name('le
     Route::get('exams/{exam}/clone', [LecturerExamController::class, 'clone'])->name('exams.clone');
     Route::post('exams/{exam}/clone', [LecturerExamController::class, 'storeClone'])->name('exams.clone.store');
     Route::get('exams/{exam}/attempts', [\App\Http\Controllers\Lecturer\AttemptController::class, 'index'])->name('exams.attempts.index');
+    Route::get('exams/{exam}/attempts/export', [\App\Http\Controllers\Lecturer\AttemptController::class, 'export'])->name('exams.attempts.export');
     Route::get('attempts/{attempt}', [\App\Http\Controllers\Lecturer\AttemptController::class, 'show'])->name('attempts.show');
     Route::put('attempts/{attempt}', [\App\Http\Controllers\Lecturer\AttemptController::class, 'update'])->name('attempts.update');
     Route::get('exams/{exam}/questions/create', [LecturerQuestionController::class, 'create'])->name('questions.create');

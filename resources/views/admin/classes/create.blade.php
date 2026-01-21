@@ -1,7 +1,14 @@
 @extends('layouts.admin')
 
 @section('header')
-    {{ __('Create Class') }}
+    <div class="space-y-2">
+        <x-breadcrumbs :items="[
+            ['label' => __('Dashboard'), 'url' => route('admin.dashboard')],
+            ['label' => __('Classes'), 'url' => route('admin.classes.index')],
+            ['label' => __('Create'), 'url' => null],
+        ]" />
+        <span>{{ __('Create Class') }}</span>
+    </div>
 @endsection
 
 @section('content')

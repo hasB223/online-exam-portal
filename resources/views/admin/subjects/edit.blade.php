@@ -1,7 +1,14 @@
 @extends('layouts.admin')
 
 @section('header')
-    {{ __('Edit Subject') }}
+    <div class="space-y-2">
+        <x-breadcrumbs :items="[
+            ['label' => __('Dashboard'), 'url' => route('admin.dashboard')],
+            ['label' => __('Subjects'), 'url' => route('admin.subjects.index')],
+            ['label' => __('Edit'), 'url' => null],
+        ]" />
+        <span>{{ __('Edit Subject') }}</span>
+    </div>
 @endsection
 
 @section('content')

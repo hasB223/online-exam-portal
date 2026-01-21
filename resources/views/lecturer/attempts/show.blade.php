@@ -1,14 +1,22 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex flex-wrap items-center justify-between gap-3">
-            <h2 class="text-2xl font-semibold text-slate-900 dark:text-white">
-                {{ __('Grading') }} — {{ $attempt->exam->title }}
-            </h2>
-            @if ($attempt->isGraded())
-                <span class="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-900 dark:text-emerald-200">
-                    {{ __('Graded') }}
-                </span>
-            @endif
+        <div class="space-y-2">
+            <x-breadcrumbs :items="[
+                ['label' => __('Dashboard'), 'url' => route('lecturer.dashboard')],
+                ['label' => __('Manage Exams'), 'url' => route('lecturer.exams.index')],
+                ['label' => __('Attempts'), 'url' => route('lecturer.exams.attempts.index', $attempt->exam)],
+                ['label' => __('Review'), 'url' => null],
+            ]" />
+            <div class="flex flex-wrap items-center justify-between gap-3">
+                <h2 class="text-2xl font-semibold text-slate-900 dark:text-white">
+                    {{ __('Grading') }} — {{ $attempt->exam->title }}
+                </h2>
+                @if ($attempt->isGraded())
+                    <span class="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-900 dark:text-emerald-200">
+                        {{ __('Graded') }}
+                    </span>
+                @endif
+            </div>
         </div>
     </x-slot>
 

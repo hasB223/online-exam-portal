@@ -1,8 +1,15 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="text-2xl font-semibold text-slate-900 dark:text-white">
-            {{ $exam->title }}
-        </h2>
+        <div class="space-y-2">
+            <x-breadcrumbs :items="[
+                ['label' => __('Dashboard'), 'url' => route('student.dashboard')],
+                ['label' => __('Exams'), 'url' => route('student.exams.index')],
+                ['label' => $exam->title, 'url' => null],
+            ]" />
+            <h2 class="text-2xl font-semibold text-slate-900 dark:text-white">
+                {{ $exam->title }}
+            </h2>
+        </div>
     </x-slot>
 
     <div class="py-10">

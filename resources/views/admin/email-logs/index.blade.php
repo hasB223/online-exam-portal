@@ -1,7 +1,13 @@
 @extends('layouts.admin')
 
 @section('header')
-    {{ __('Email Logs') }}
+    <div class="space-y-2">
+        <x-breadcrumbs :items="[
+            ['label' => __('Dashboard'), 'url' => route('admin.dashboard')],
+            ['label' => __('Email Logs'), 'url' => route('admin.email-logs.index')],
+        ]" />
+        <span>{{ __('Email Logs') }}</span>
+    </div>
 @endsection
 
 @section('content')

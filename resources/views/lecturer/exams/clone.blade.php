@@ -1,12 +1,19 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex flex-wrap items-center justify-between gap-3">
-            <h2 class="text-2xl font-semibold text-slate-900 dark:text-white">
-                {{ __('Clone Exam') }}
-            </h2>
-            <a href="{{ route('lecturer.exams.edit', $exam) }}" class="rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 transition hover:border-indigo-500 hover:text-indigo-600 dark:border-slate-700 dark:text-slate-300">
-                {{ __('Back to Exam') }}
-            </a>
+        <div class="space-y-2">
+            <x-breadcrumbs :items="[
+                ['label' => __('Dashboard'), 'url' => route('lecturer.dashboard')],
+                ['label' => __('Manage Exams'), 'url' => route('lecturer.exams.index')],
+                ['label' => __('Clone'), 'url' => null],
+            ]" />
+            <div class="flex flex-wrap items-center justify-between gap-3">
+                <h2 class="text-2xl font-semibold text-slate-900 dark:text-white">
+                    {{ __('Clone Exam') }}
+                </h2>
+                <a href="{{ route('lecturer.exams.edit', $exam) }}" class="rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 transition hover:border-indigo-500 hover:text-indigo-600 dark:border-slate-700 dark:text-slate-300">
+                    {{ __('Back to Exam') }}
+                </a>
+            </div>
         </div>
     </x-slot>
 

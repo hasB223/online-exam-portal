@@ -1,9 +1,16 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex flex-wrap items-center justify-between gap-3">
-            <h2 class="text-2xl font-semibold text-slate-900 dark:text-white">
-                {{ __('Attempts for') }} {{ $exam->title }}
-            </h2>
+        <div class="space-y-2">
+            <x-breadcrumbs :items="[
+                ['label' => __('Dashboard'), 'url' => route('lecturer.dashboard')],
+                ['label' => __('Manage Exams'), 'url' => route('lecturer.exams.index')],
+                ['label' => __('Attempts'), 'url' => null],
+            ]" />
+            <div class="flex flex-wrap items-center justify-between gap-3">
+                <h2 class="text-2xl font-semibold text-slate-900 dark:text-white">
+                    {{ __('Attempts for') }} {{ $exam->title }}
+                </h2>
+            </div>
         </div>
     </x-slot>
 
@@ -15,12 +22,17 @@
                 </div>
             @endif
 
-            <div class="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-600 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300">
-                {{ __('Class') }}: {{ $exam->classRoom?->name ?? __('-') }}
-                <span class="mx-2 text-slate-300">—</span>
-                {{ __('Students') }}: {{ $students->count() }}
-                <span class="mx-2 text-slate-300">—</span>
-                {{ __('Attempts submitted') }}: {{ $submittedCount }}
+            <div class="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-600 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300">
+                <div>
+                    {{ __('Class') }}: {{ $exam->classRoom?->name ?? __('-') }}
+                    <span class="mx-2 text-slate-300">—</span>
+                    {{ __('Students') }}: {{ $students->count() }}
+                    <span class="mx-2 text-slate-300">—</span>
+                    {{ __('Attempts submitted') }}: {{ $submittedCount }}
+                </div>
+                <a href="{{ route('lecturer.exams.attempts.export', $exam) }}" class="rounded-full border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-600 transition hover:border-indigo-500 hover:text-indigo-600 dark:border-slate-700 dark:text-slate-300">
+                    {{ __('Export CSV') }}
+                </a>
             </div>
 
             <div class="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">

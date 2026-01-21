@@ -1,11 +1,17 @@
 @extends('layouts.admin')
 
 @section('header')
-    <div class="flex flex-wrap items-center justify-between gap-3">
-        <span>{{ __('Manage Users') }}</span>
-        <a href="{{ route('admin.users.create') }}" class="rounded-full bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-500">
-            {{ __('New User') }}
-        </a>
+    <div class="space-y-2">
+        <x-breadcrumbs :items="[
+            ['label' => __('Dashboard'), 'url' => route('admin.dashboard')],
+            ['label' => __('Users'), 'url' => route('admin.users.index')],
+        ]" />
+        <div class="flex flex-wrap items-center justify-between gap-3">
+            <span>{{ __('Manage Users') }}</span>
+            <a href="{{ route('admin.users.create') }}" class="rounded-full bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-500">
+                {{ __('New User') }}
+            </a>
+        </div>
     </div>
 @endsection
 

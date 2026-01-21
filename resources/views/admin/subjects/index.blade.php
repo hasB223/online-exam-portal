@@ -1,11 +1,17 @@
 @extends('layouts.admin')
 
 @section('header')
-    <div class="flex flex-wrap items-center justify-between gap-3">
-        <span>{{ __('Manage Subjects') }}</span>
-        <a href="{{ route('admin.subjects.create') }}" class="rounded-full bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-500">
-            {{ __('New Subject') }}
-        </a>
+    <div class="space-y-2">
+        <x-breadcrumbs :items="[
+            ['label' => __('Dashboard'), 'url' => route('admin.dashboard')],
+            ['label' => __('Subjects'), 'url' => route('admin.subjects.index')],
+        ]" />
+        <div class="flex flex-wrap items-center justify-between gap-3">
+            <span>{{ __('Manage Subjects') }}</span>
+            <a href="{{ route('admin.subjects.create') }}" class="rounded-full bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-500">
+                {{ __('New Subject') }}
+            </a>
+        </div>
     </div>
 @endsection
 
