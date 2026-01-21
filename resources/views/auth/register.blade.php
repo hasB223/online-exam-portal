@@ -3,6 +3,10 @@
         {{ __('← Back to Home') }}
     </a>
 
+    <div class="mb-6 rounded-2xl border border-indigo-100 bg-indigo-50 px-4 py-3 text-sm text-indigo-700 dark:border-indigo-900 dark:bg-indigo-950 dark:text-indigo-200">
+        {{ __('Registration requires admin approval before you can access the student dashboard.') }}
+    </div>
+
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
