@@ -39,6 +39,24 @@ Route::get('/dashboard', function () {
     return redirect()->route('student.dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/pending', function () {
+    $user = auth()->user();
+
+    if (! $user) {
+        return redirect()->route('login');
+    }
+
+    if (! $user->isStudent()) {
+        return redirect()->route('dashboard');
+    }
+
+    if ($user->isActive() && $user->class_room_id) {
+        return redirect()->route('student.dashboard');
+    }
+
+    return view('pending', compact('user'));
+})->middleware('auth')->name('pending');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -73,7 +91,7 @@ Route::middleware(['auth', 'role:lecturer,admin'])->prefix('lecturer')->name('le
     Route::delete('exams/{exam}/questions/{question}', [LecturerQuestionController::class, 'destroy'])->name('questions.destroy');
 });
 
-Route::middleware(['auth', 'role:student'])->prefix('student')->name('student.')->group(function () {
+Route::middleware(['auth', 'role:student', 'student.active'])->prefix('student')->name('student.')->group(function () {
     Route::get('/', function () {
         $announcements = \App\Models\Announcement::visibleTo(request()->user())->get();
         return view('student.dashboard', compact('announcements'));

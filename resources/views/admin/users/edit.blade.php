@@ -22,7 +22,7 @@
                         <x-input-error :messages="$errors->get('email')" class="mt-2" />
                     </div>
 
-                    <div class="grid gap-4 sm:grid-cols-2">
+                    <div class="grid gap-4 sm:grid-cols-3">
                         <div>
                             <x-input-label for="role" :value="__('Role')" />
                             <select id="role" name="role" class="mt-1 w-full rounded-xl border-slate-200 text-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-950">
@@ -31,6 +31,14 @@
                                 <option value="student" @selected(old('role', $user->role) === 'student')>{{ __('Student') }}</option>
                             </select>
                             <x-input-error :messages="$errors->get('role')" class="mt-2" />
+                        </div>
+                        <div>
+                            <x-input-label for="status" :value="__('Status')" />
+                            <select id="status" name="status" class="mt-1 w-full rounded-xl border-slate-200 text-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-slate-700 dark:bg-slate-950">
+                                <option value="active" @selected(old('status', $user->status) === 'active')>{{ __('Active') }}</option>
+                                <option value="pending" @selected(old('status', $user->status) === 'pending')>{{ __('Pending') }}</option>
+                            </select>
+                            <x-input-error :messages="$errors->get('status')" class="mt-2" />
                         </div>
                         <div>
                             <x-input-label for="class_room_id" :value="__('Class')" />

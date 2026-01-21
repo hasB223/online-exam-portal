@@ -10,20 +10,28 @@ use App\Mail\AccountUpdatedMail;
 use App\Models\ClassRoom;
 use App\Models\EmailLog;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $role = $request->query('role', 'all');
+        $status = $request->query('status', 'all');
+        $unassigned = $request->boolean('unassigned');
+
         $users = User::query()
             ->with('classRoom')
+            ->when($role !== 'all', fn ($query) => $query->where('role', $role))
+            ->when($status !== 'all', fn ($query) => $query->where('status', $status))
+            ->when($unassigned, fn ($query) => $query->where('role', 'student')->whereNull('class_room_id'))
             ->orderBy('name')
             ->get();
 
-        return view('admin.users.index', compact('users'));
+        return view('admin.users.index', compact('users', 'role', 'status', 'unassigned'));
     }
 
     public function create()
@@ -43,6 +51,7 @@ class UserController extends Controller
             $data['class_room_id'] = null;
         }
 
+        $data['status'] = 'active';
         $data['password'] = Hash::make($data['password']);
 
         $user = User::create($data);
@@ -109,6 +118,7 @@ class UserController extends Controller
 
         if ($data['role'] !== 'student') {
             $data['class_room_id'] = null;
+            $data['status'] = 'active';
         }
 
         if (! empty($data['password'])) {

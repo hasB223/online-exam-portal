@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Admin User',
                 'role' => 'admin',
+                'status' => 'active',
                 'password' => Hash::make('password'),
                 'email_verified_at' => now(),
             ]
@@ -33,6 +34,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Lecturer User',
                 'role' => 'lecturer',
+                'status' => 'active',
                 'password' => Hash::make('password'),
                 'email_verified_at' => now(),
             ]
@@ -48,6 +50,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Student One',
                 'role' => 'student',
+                'status' => 'active',
                 'password' => Hash::make('password'),
                 'email_verified_at' => now(),
                 'class_room_id' => $classRoom->id,
@@ -59,6 +62,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Student Two',
                 'role' => 'student',
+                'status' => 'active',
                 'password' => Hash::make('password'),
                 'email_verified_at' => now(),
                 'class_room_id' => $classRoom->id,
