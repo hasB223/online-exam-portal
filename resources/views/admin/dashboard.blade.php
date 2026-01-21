@@ -17,6 +17,30 @@
                     @endforeach
                 </div>
             @endif
+
+            <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                <a href="{{ route('admin.users.index', ['role' => 'student', 'status' => 'pending']) }}" class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-indigo-500 dark:border-slate-800 dark:bg-slate-900">
+                    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">{{ __('Pending students') }}</p>
+                    <p class="mt-2 text-3xl font-semibold text-slate-900 dark:text-white">{{ $pendingStudentsCount }}</p>
+                    <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">{{ __('Awaiting approval') }}</p>
+                </a>
+                <a href="{{ route('admin.users.index', ['role' => 'student', 'unassigned' => 1]) }}" class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-indigo-500 dark:border-slate-800 dark:bg-slate-900">
+                    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">{{ __('Unassigned students') }}</p>
+                    <p class="mt-2 text-3xl font-semibold text-slate-900 dark:text-white">{{ $unassignedStudentsCount }}</p>
+                    <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">{{ __('No class assigned') }}</p>
+                </a>
+                <a href="{{ route('admin.users.index', ['role' => 'student', 'status' => 'active']) }}" class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-indigo-500 dark:border-slate-800 dark:bg-slate-900">
+                    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">{{ __('Active students') }}</p>
+                    <p class="mt-2 text-3xl font-semibold text-slate-900 dark:text-white">{{ $activeStudentsCount }}</p>
+                    <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">{{ __('Assigned and active') }}</p>
+                </a>
+                <a href="{{ route('admin.users.index', ['role' => 'lecturer']) }}" class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-indigo-500 dark:border-slate-800 dark:bg-slate-900">
+                    <p class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">{{ __('Lecturers') }}</p>
+                    <p class="mt-2 text-3xl font-semibold text-slate-900 dark:text-white">{{ $lecturersCount }}</p>
+                    <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">{{ __('Teaching staff') }}</p>
+                </a>
+            </div>
+
             <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
                 <p class="text-sm text-slate-600 dark:text-slate-400">
                     {{ __('Manage roles, accounts, and platform settings from here.') }}

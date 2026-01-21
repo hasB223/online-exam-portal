@@ -68,7 +68,33 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', function () {
         $announcements = \App\Models\Announcement::visibleTo(request()->user())->get();
-        return view('admin.dashboard', compact('announcements'));
+
+        $pendingStudentsCount = \App\Models\User::query()
+            ->where('role', 'student')
+            ->where('status', 'pending')
+            ->count();
+
+        $unassignedStudentsCount = \App\Models\User::query()
+            ->where('role', 'student')
+            ->whereNull('class_room_id')
+            ->count();
+
+        $activeStudentsCount = \App\Models\User::query()
+            ->where('role', 'student')
+            ->where('status', 'active')
+            ->count();
+
+        $lecturersCount = \App\Models\User::query()
+            ->where('role', 'lecturer')
+            ->count();
+
+        return view('admin.dashboard', compact(
+            'announcements',
+            'pendingStudentsCount',
+            'unassignedStudentsCount',
+            'activeStudentsCount',
+            'lecturersCount'
+        ));
     })->name('dashboard');
     Route::resource('users', AdminUserController::class);
     Route::resource('classes', \App\Http\Controllers\Admin\ClassRoomController::class);
@@ -132,8 +158,50 @@ Route::middleware(['auth', 'role:lecturer,admin'])->prefix('lecturer')->name('le
 
 Route::middleware(['auth', 'role:student', 'student.active'])->prefix('student')->name('student.')->group(function () {
     Route::get('/', function () {
-        $announcements = \App\Models\Announcement::visibleTo(request()->user())->get();
-        return view('student.dashboard', compact('announcements'));
+        $user = request()->user();
+
+        $announcements = \App\Models\Announcement::visibleTo($user)->get();
+
+        $exams = \App\Models\Exam::query()
+            ->with(['subject'])
+            ->withCount('questions')
+            ->where('class_room_id', $user->class_room_id)
+            ->where('is_published', true)
+            ->latest()
+            ->take(6)
+            ->get();
+
+        $attempts = \App\Models\ExamAttempt::query()
+            ->where('user_id', $user->id)
+            ->whereIn('exam_id', $exams->pluck('id'))
+            ->get()
+            ->keyBy('exam_id');
+
+        $statuses = [];
+        foreach ($exams as $exam) {
+            $attempt = $attempts->get($exam->id);
+
+            if (! $attempt) {
+                $statuses[$exam->id] = 'not_started';
+                continue;
+            }
+
+            if ($attempt->ends_at && $attempt->status === 'in_progress' && now()->greaterThan($attempt->ends_at)) {
+                $attempt->update(['status' => 'expired']);
+            }
+
+            $statuses[$exam->id] = $attempt->status;
+        }
+
+        $recentAttempts = \App\Models\ExamAttempt::query()
+            ->with(['exam:id,title'])
+            ->where('user_id', $user->id)
+            ->whereIn('status', ['submitted'])
+            ->latest('submitted_at')
+            ->take(5)
+            ->get();
+
+        return view('student.dashboard', compact('announcements', 'exams', 'attempts', 'statuses', 'recentAttempts'));
     })->name('dashboard');
     Route::get('/exams', [StudentExamController::class, 'index'])->name('exams.index');
     Route::get('/exams/{exam}', [StudentExamController::class, 'show'])->name('exams.show');
