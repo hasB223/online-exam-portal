@@ -1,4 +1,13 @@
 <x-guest-layout>
+    <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
+        <a href="{{ url('/') }}" class="inline-flex items-center text-sm text-slate-600 transition hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">
+            {{ __('← Back to Home') }}
+        </a>
+        <a href="{{ route('login') }}" class="text-sm text-slate-600 transition hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">
+            {{ __('Back to Login') }}
+        </a>
+    </div>
+
     <div class="mb-4 text-sm text-gray-600">
         {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
     </div>

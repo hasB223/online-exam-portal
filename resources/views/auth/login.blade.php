@@ -1,4 +1,8 @@
 <x-guest-layout>
+    <a href="{{ url('/') }}" class="mb-6 inline-flex items-center text-sm text-slate-600 transition hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">
+        {{ __('← Back to Home') }}
+    </a>
+
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
