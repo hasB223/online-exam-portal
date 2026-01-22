@@ -7,6 +7,7 @@ A role-based online examination system built with **Laravel 11 + Breeze**, desig
 The system focuses on clear workflows, access control, and usability, with support for **timed exams**, **auto-scoring**, **manual grading**, **bilingual UI**, and **dark/light mode**.
 
 The system is intentionally designed with clear separation of responsibilities between administrators, lecturers, and students, prioritizing maintainability and realistic academic workflows over feature overload.
+
 ---
 
 ## Key Features
@@ -45,7 +46,7 @@ The system is intentionally designed with clear separation of responsibilities b
 * Role-based announcements
 * Email notifications with logging
 * Breadcrumb navigation
-* Pending registration approval flow
+* Pending registration approval flow (admin-controlled onboarding)
 
 ---
 
