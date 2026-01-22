@@ -67,7 +67,7 @@ The system is intentionally designed with clear separation of responsibilities b
 
 * PHP 8.2 or higher
 * Composer
-* Node.js & npm
+* Node.js 18+ (or 20 LTS recommended) & npm
 * MySQL / PostgreSQL
 
 ### Steps
