@@ -48,6 +48,9 @@ The system is intentionally designed with clear separation of responsibilities b
 * Breadcrumb navigation
 * Pending registration approval flow (admin-controlled onboarding)
 
+![Welcome Page](docs/welcome.png)
+*Welcome page (dark mode).*
+
 ---
 
 ## Tech Stack
