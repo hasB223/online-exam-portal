@@ -1,66 +1,193 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+---
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# Online Exam Portal
 
-## About Laravel
+A role-based online examination system built with **Laravel 11 + Breeze**, designed for administrators, lecturers, and students to manage exams, conduct assessments, and review results efficiently.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+The system focuses on clear workflows, access control, and usability, with support for **timed exams**, **auto-scoring**, **manual grading**, **bilingual UI**, and **dark/light mode**.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## ✨ Key Features
 
-## Learning Laravel
+### Roles & Access
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+* **Admin**
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+  * Manage users, roles, classes, and subjects
+  * Approve student registrations
+  * Publish announcements
+  * View email logs
+* **Lecturer**
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+  * Create, edit, publish, and clone exams
+  * Add MCQ and text questions
+  * Grade text answers
+  * View student attempt status and results
+  * Export exam results (CSV)
+* **Student**
 
-## Laravel Sponsors
+  * Take timed exams assigned to their class
+  * Resume in-progress exams
+  * View submissions and results
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Exams & Assessment
 
-### Premium Partners
+* Timed exams with automatic expiry
+* MCQ auto-scoring
+* Text answer grading workflow
+* Class-based access control
+* Exam cloning for reuse across classes/batches
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### UX & System
 
-## Contributing
+* Responsive design (mobile-friendly)
+* Light / Dark theme toggle
+* Bilingual interface (English / Malay)
+* Role-based announcements
+* Email notifications with logging
+* Breadcrumb navigation
+* Pending registration approval flow
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+## 🛠 Tech Stack
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+* **Backend**: Laravel 11 (PHP 8.2+)
+* **Auth**: Laravel Breeze (Blade)
+* **Frontend**: Blade + Tailwind CSS (no JS frameworks)
+* **Database**: MySQL / PostgreSQL (configurable)
+* **Mail**: Laravel Mail (log/mailtrap supported)
+* **Build Tools**: Vite
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 🚀 Installation & Setup
 
-## License
+### Prerequisites
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+* PHP 8.2 or higher
+* Composer
+* Node.js & npm
+* MySQL / PostgreSQL
+
+### Steps
+
+```bash
+# Clone repository
+git clone <repository-url>
+cd online-exam-portal
+
+# Install backend dependencies
+composer install
+
+# Install frontend dependencies
+npm install
+npm run dev
+
+# Environment setup
+cp .env.example .env
+php artisan key:generate
+
+# Configure database in .env
+DB_DATABASE=your_db
+DB_USERNAME=your_user
+DB_PASSWORD=your_password
+
+# Run migrations & seed data
+php artisan migrate:fresh --seed
+
+# Start server
+php artisan serve
+```
+
+Access the app at:
+`http://127.0.0.1:8000`
+
+---
+
+## 👤 Demo Accounts (Local Environment)
+
+> Visible on the welcome page when `APP_ENV=local`
+
+| Role     | Email                                               | Password |
+| -------- | --------------------------------------------------- | -------- |
+| Admin    | [admin@example.com](mailto:admin@example.com)       | password |
+| Lecturer | [lecturer@example.com](mailto:lecturer@example.com) | password |
+| Student  | [student1@example.com](mailto:student1@example.com) | password |
+| Student  | [student2@example.com](mailto:student2@example.com) | password |
+
+---
+
+## 🧭 Main User Flows
+
+### Admin
+
+1. Create classes and subjects
+2. Assign subjects to classes
+3. Create lecturers and students
+4. Approve student registrations
+5. Publish announcements
+
+### Lecturer
+
+1. Create exams for a class + subject
+2. Add questions (MCQ / Text)
+3. Publish exam (optional student notification)
+4. Review attempts and grade text answers
+5. Export results (CSV)
+6. Clone exams for reuse
+
+### Student
+
+1. Register (pending approval)
+2. Take assigned exams
+3. Resume in-progress attempts
+4. View results after submission/grading
+
+---
+
+## 🌐 Localization & Theme
+
+* Language switch: **English / Malay**
+* Theme switch: **Light / Dark**
+* Preferences persist across pages (including auth screens)
+
+> UI is bilingual; exam content language is defined by the lecturer.
+
+---
+
+## ⚠️ Notes & Assumptions
+
+* Public registration creates **pending student accounts** requiring admin approval
+* One attempt per student per exam
+* Admin does not manage exams directly (academic ownership stays with lecturers)
+* Email bodies are **not stored**, only logs/metadata
+* No background queues required (emails sent synchronously)
+
+---
+
+## 🔒 Security & Access Control
+
+* Role-based middleware and policies
+* Students restricted to their assigned class exams
+* Lecturers restricted to their own exams
+* Admin-only access to system management
+
+---
+
+## 📌 Out of Scope (Intentionally)
+
+* Real-time proctoring
+* Question randomization
+* Multi-attempt exams
+* Plagiarism detection
+* Frontend JS frameworks (Vue/React)
+
+---
+
+## 📄 License
+
+This project is provided for **assessment and educational purposes**.
+
+---
